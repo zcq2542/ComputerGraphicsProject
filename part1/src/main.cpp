@@ -286,10 +286,15 @@ void CleanUp(){
 * @return program status
 */
 int main( int argc, char* args[] ){
+	std::string defaultObject;
     if (argc < 2) {
         std::cerr << "More argument needed, please include file path after ./prog, such as ./prog ./../../common/objects/bunny_centered.obj" << std::endl;
-        return 1;
-    }
+		std::cout << "Using default object, dango alien \"./../common/objects/dango_alien_low_poly.obj\"" << std::endl;
+		defaultObject = "./../common/objects/dango_alien_low_poly.obj";
+        // return 1;
+    } else {
+		defaultObject = args[1];
+	}
 
     std::cout << "Use arrow keys to move camera forward, backward, left, and right\n";
 	std::cout << "Use mouse to rotate both along upvector and y axis\n";
@@ -297,7 +302,7 @@ int main( int argc, char* args[] ){
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program
-	InitializeProgram(args[1]);
+	InitializeProgram(defaultObject);
 
 	// 2. Call the main application loop
 	MainLoop();	
