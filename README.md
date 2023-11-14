@@ -8,8 +8,8 @@
 
 
 * Name and partners name(At most teams of 2 folks total)
-  * Team member 1: *edit this*
-  * Team member 2: *edit this*
+  * Team member 1: Lingxin Ma
+  * Team member 2: Cuiqi Zheng
 * How many hours did it take you to complete this final project? 
 * Did you collaborate or share ideas with any other students/TAs/Professors?
 * Did you use any external resources? 

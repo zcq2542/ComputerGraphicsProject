@@ -1,0 +1,14 @@
+# Ignore all
+*
+# Unignore all with extensions
+!*.*
+# Unignore all dirs
+!*/
+# Ignore .vscode (if using vscode)
+**/.vscode/
+# Ignore .DS_Store
+**/.DS_Store
+## Ignore .ppm file
+#*.ppm
+# Ignore dSYM
+*.dSYM
