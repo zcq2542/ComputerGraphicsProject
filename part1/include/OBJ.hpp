@@ -32,7 +32,7 @@ public:
 
     // Render objects
     void Initialize();
-    void PreDraw();
+    void PreDraw(glm::vec3 objectCoord);
     void Draw();
 
     // Get vertex and normal data

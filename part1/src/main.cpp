@@ -120,7 +120,7 @@ void PreDraw(){
 */
 void Draw(){
     // Draw object
-    gObject->PreDraw();
+    gObject->PreDraw(glm::vec3(1.0f,0.0f,1.0f));
     gObject->Draw();
 
     // Draw light
@@ -182,24 +182,24 @@ void Input(){
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 
     // Camera
-    // Update our position of the camera
+    // Update our position of the camera, move character with WASD
     float cameraSpeed = 0.1f;
 	
-    if (state[SDL_SCANCODE_UP]) {
+    if (state[SDL_SCANCODE_W]) {
         g.gCamera.MoveForward(cameraSpeed);
     }
-    if (state[SDL_SCANCODE_DOWN]) {
+    if (state[SDL_SCANCODE_S]) {
         g.gCamera.MoveBackward(cameraSpeed);
     }
-    if (state[SDL_SCANCODE_LEFT]) {
+    if (state[SDL_SCANCODE_A]) {
 		g.gCamera.MoveLeft(cameraSpeed);
     }
-    if (state[SDL_SCANCODE_RIGHT]) {
+    if (state[SDL_SCANCODE_D]) {
 		g.gCamera.MoveRight(cameraSpeed);
     }
 
-
-    if (state[SDL_SCANCODE_W]) {
+	// Press TAB to switch between fill and line mode
+    if (state[SDL_SCANCODE_TAB]) {
         SDL_Delay(250); // This is hacky in the name of simplicity,
                        // but we just delay the
                        // system by a few milli-seconds to process the 
@@ -296,9 +296,9 @@ int main( int argc, char* args[] ){
 		defaultObject = args[1];
 	}
 
-    std::cout << "Use arrow keys to move camera forward, backward, left, and right\n";
-	std::cout << "Use mouse to rotate both along upvector and y axis\n";
-    std::cout << "Use w to toggle wireframe\n";
+    std::cout << "Use WASD keys to move forward, left, backward, and right\n";
+	std::cout << "Use mouse to look around\n";
+    std::cout << "Use TAB to toggle wireframe\n";
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program

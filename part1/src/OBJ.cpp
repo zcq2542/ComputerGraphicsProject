@@ -167,14 +167,15 @@ void OBJ::Initialize() {
 * 		 pipeline.
 * @return void
 */
-void OBJ::PreDraw(){
+void OBJ::PreDraw(glm::vec3 objectCoord){
     // Use our shader
 	glUseProgram(mShaderID);
 
     // Model transformation by translating our object into world space
-    glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,0.0f)); 
+    // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,1.0f)); 
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), objectCoord);
     static float rot = 0.0f;
-    rot += 0.1f; // Add a rotation
+    // rot += 0.1f; // Add a rotation
     model = glm::rotate(model,glm::radians(rot),glm::vec3(0.0f,1.0f,0.0f)); 
 
     // Retrieve our location of our Model Matrix
