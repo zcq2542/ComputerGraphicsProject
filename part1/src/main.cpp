@@ -25,7 +25,10 @@
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
-OBJ* gObject;
+OBJ* gHouse;
+OBJ* gChapel;
+OBJ* gWindmill;
+OBJ* gChalice;
 
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
@@ -33,7 +36,7 @@ OBJ* gObject;
 *
 * @return void
 */
-void InitializeProgram(std::string fileName){
+void InitializeProgram(){
 	// Initialize SDL
 	if(SDL_Init(SDL_INIT_VIDEO)< 0){
 		std::cout << "SDL could not initialize! SDL Error: " << SDL_GetError() << "\n";
@@ -50,7 +53,7 @@ void InitializeProgram(std::string fileName){
 	SDL_GL_SetAttribute( SDL_GL_DEPTH_SIZE, 24 );
 
 	// Create an application window using OpenGL that supports SDL
-	g.gGraphicsApplicationWindow = SDL_CreateWindow( "Tesselation",
+	g.gGraphicsApplicationWindow = SDL_CreateWindow( "Deep In Woods",
 													SDL_WINDOWPOS_UNDEFINED,
 													SDL_WINDOWPOS_UNDEFINED,
 													g.gScreenWidth,
@@ -79,9 +82,21 @@ void InitializeProgram(std::string fileName){
     // Initialize Light
     g.gLight.Initialize();
 
-    // Initialize Object
-    gObject = new OBJ(fileName);
-    gObject->Initialize();
+    // Initialize House Object
+    gHouse = new OBJ(g.gHouseFileName);
+    gHouse->Initialize();
+
+    // Initialize Chapel Object
+	gChapel = new OBJ(g.gChapelFileName);
+	gChapel->Initialize();
+
+    // Initialize Windmill Object
+	gWindmill = new OBJ(g.gWindmillFileName);
+	gWindmill->Initialize();
+
+	// Initialize Chalice Object
+	gChalice = new OBJ(g.gChaliceFileName);
+	gChalice->Initialize();
 }
 
 /**
@@ -102,7 +117,7 @@ void PreDraw(){
     // Initialize clear color
     // This is the background of the screen.
     glViewport(0, 0, g.gScreenWidth, g.gScreenHeight);
-    glClearColor( 0.4f, 0.4f, 0.4f, 1.f );
+    glClearColor( 0.2f, 0.2f, 0.2f, 1.f );
 	// glClearColor( 0.f, 0.f, 0.f, 1.f );
 
     // Clear color buffer and Depth Buffer
@@ -119,9 +134,18 @@ void PreDraw(){
 * @return void
 */
 void Draw(){
-    // Draw object
-    gObject->PreDraw(glm::vec3(1.0f,0.0f,1.0f));
-    gObject->Draw();
+    // Draw objects
+    gHouse->PreDraw(glm::vec3(3.0f,0.0f,1.0f));
+    gHouse->Draw();
+
+	gChapel->PreDraw(glm::vec3(-5.0f,0.0f,-3.0f));
+    gChapel->Draw();
+
+	gWindmill->PreDraw(glm::vec3(5.0f,1.0f,-3.0f));
+    gWindmill->Draw();
+
+	gChalice->PreDraw(glm::vec3(0.0f,-0.4f,-1.0f));
+    gChalice->Draw();
 
     // Draw light
     g.gLight.PreDraw();
@@ -272,7 +296,10 @@ void CleanUp(){
 	SDL_DestroyWindow(g.gGraphicsApplicationWindow);
 	g.gGraphicsApplicationWindow = nullptr;
 
-	delete gObject;
+	delete gHouse;
+	delete gChapel;
+	delete gWindmill;
+	delete gChalice;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -285,16 +312,7 @@ void CleanUp(){
 * @return program status
 */
 int main( int argc, char* args[] ){
-	std::string defaultObject;
-    if (argc < 2) {
-        std::cerr << "More argument needed, please include file path after ./prog, such as ./prog ./../../common/objects/bunny_centered.obj" << std::endl;
-		std::cout << "Using default object, dango alien \"./../common/objects/dango_alien_low_poly.obj\"" << std::endl;
-		// defaultObject = "./../common/objects/dango_alien_low_poly.obj";
-		defaultObject = "./../common/objects/house/house_obj.obj";
-        // return 1;
-    } else {
-		defaultObject = args[1];
-	}
+	std::cout << "Generating environment..." << std::endl;
 
     std::cout << "Use WASD keys to move forward, left, backward, and right\n";
 	std::cout << "Use mouse to look around\n";
@@ -302,7 +320,7 @@ int main( int argc, char* args[] ){
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program
-	InitializeProgram(defaultObject);
+	InitializeProgram();
 
 	// 2. Call the main application loop
 	MainLoop();	

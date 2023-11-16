@@ -24,8 +24,8 @@ void Camera::MouseLook(int mouseX, int mouseY){
     // Detect how much the mouse has moved since
     // the last time
     glm::vec2 mouseDelta = m_oldMousePosition - newMousePosition;
-    // mouseDelta.x *= 0.2f; // mouse sensitivity.
-    // mouseDelta.y *= 0.2f; // mouse sensitivity.
+    mouseDelta.x *= 0.2f; // mouse sensitivity.
+    mouseDelta.y *= 0.2f; // mouse sensitivity.
 
     // Rotate about the upVector
     m_viewDirection = glm::rotate(m_viewDirection, glm::radians(mouseDelta.x), m_upVector);
