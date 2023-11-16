@@ -183,8 +183,7 @@ void Input(){
 
     // Camera
     // Update our position of the camera, move character with WASD
-    float cameraSpeed = 0.1f;
-	
+    float cameraSpeed = 0.02f;
     if (state[SDL_SCANCODE_W]) {
         g.gCamera.MoveForward(cameraSpeed);
     }
@@ -290,7 +289,8 @@ int main( int argc, char* args[] ){
     if (argc < 2) {
         std::cerr << "More argument needed, please include file path after ./prog, such as ./prog ./../../common/objects/bunny_centered.obj" << std::endl;
 		std::cout << "Using default object, dango alien \"./../common/objects/dango_alien_low_poly.obj\"" << std::endl;
-		defaultObject = "./../common/objects/dango_alien_low_poly.obj";
+		// defaultObject = "./../common/objects/dango_alien_low_poly.obj";
+		defaultObject = "./../common/objects/house/house_obj.obj";
         // return 1;
     } else {
 		defaultObject = args[1];

@@ -26,6 +26,7 @@ public:
     void MoveBackward(float speed);
     void MoveLeft(float speed);
     void MoveRight(float speed);
+    void WalkCycle(float speed);
     void MoveUp(float speed);
     void MoveDown(float speed);
     // Set the position for the camera
@@ -58,6 +59,10 @@ private:
     // to 'rock' or 'rattle' the camera you might play
     // with modifying this value.
     glm::vec3 m_upVector;
+    // initial height of camera position 
+    float m_cameraYCoord = -0.2f; 
+    // max height for walk cycle
+    float m_walkCycleMaxHeight = 0.03f;
 };
 
 

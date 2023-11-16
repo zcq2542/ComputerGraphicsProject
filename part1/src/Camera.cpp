@@ -2,9 +2,12 @@
 
 #include "glm/gtx/transform.hpp"
 #include "glm/gtx/rotate_vector.hpp"
+#include <SDL2/SDL.h>
 
 #include <iostream>
 
+// TODO: 
+// 1. mouse up and down rotation limit 
 void Camera::MouseLook(int mouseX, int mouseY){
     // Record our new position as a vector
     glm::vec2 newMousePosition(mouseX, mouseY);
@@ -44,24 +47,35 @@ void Camera::MoveForward(float speed){
     // update m_eyePosition by speed * m_viewDirection
     m_eyePosition.x += speed * m_viewDirection.x;
     m_eyePosition.z += speed * m_viewDirection.z;
+    WalkCycle(speed);
 }
 
 void Camera::MoveBackward(float speed){
     // update m_eyePosition by -speed * m_viewDirection
     m_eyePosition.x -= speed * m_viewDirection.x;
     m_eyePosition.z -= speed * m_viewDirection.z;
+    WalkCycle(speed);
 }
 
 void Camera::MoveLeft(float speed){
     // Compute the right vector and update m_eyePosition accordingly
     glm::vec3 rightVector = glm::normalize(glm::cross(m_viewDirection, m_upVector));
     m_eyePosition -= speed * rightVector;
+    WalkCycle(speed);
 }
 
 void Camera::MoveRight(float speed){
     // Compute the right vector and update m_eyePosition accordingly
     glm::vec3 rightVector = glm::normalize(glm::cross(m_viewDirection, m_upVector));
     m_eyePosition += speed * rightVector;
+    WalkCycle(speed);
+}
+
+void Camera::WalkCycle(float speed) {
+    // Frequency and amplitude for the walking effect (move up and down)
+    float verticalOffset = m_walkCycleMaxHeight * sin(SDL_GetTicks() * speed * 0.35f); 
+    // Adjust the initial height and add the vertical offset
+    m_eyePosition.y = m_cameraYCoord + verticalOffset; 
 }
 
 void Camera::MoveUp(float speed){
@@ -111,7 +125,7 @@ glm::vec3 Camera::GetViewDirection() {
 Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
 	// Position us at the origin.
-    m_eyePosition = glm::vec3(0.0f, 0.0f, 6.0f);
+    m_eyePosition = glm::vec3(0.0f, m_cameraYCoord, 6.0f);
 	// Looking down along the z-axis initially.
 	// Remember, this is negative because we are looking 'into' the scene.
     m_viewDirection = glm::vec3(0.0f, 0.0f, -1.0f);
