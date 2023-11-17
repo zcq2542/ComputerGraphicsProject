@@ -12,7 +12,7 @@
 #define CAMERA_HPP
 
 #include "glm/glm.hpp"
-
+#include "Light.hpp"
 class Camera{
 public:
 	// Constructor to create a camera
@@ -45,6 +45,12 @@ public:
     float GetViewZDirection();
     // Returns the view direction
     glm::vec3 GetViewDirection();
+    // Returns the eye position
+    glm::vec3 GetEyePosition();
+    // head light scope
+    float GetHeadLightScope();
+    // head light col
+    glm::vec3 GetHeadLightCol();
     
 private:
 
@@ -63,6 +69,9 @@ private:
     float m_cameraYCoord = -0.2f; 
     // max height for walk cycle
     float m_walkCycleMaxHeight = 0.03f;
+    float light_scope;
+    glm::vec3 headLightCol;
+    Light m_headLight;
 };
 
 

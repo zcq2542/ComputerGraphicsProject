@@ -11,6 +11,9 @@ struct Light{
     glm::vec3 mLightColor;
     float mSpecularStrength;
     float mAmbientIntensity;
+    glm::vec3 mLightDir;
+    int lightOn = 1;
+
 
 	GLuint mShaderID;	
     GLuint mVAO;
@@ -18,6 +21,8 @@ struct Light{
 
     /// Constructor
 	Light();
+
+    Light(glm::vec3 position, glm::vec3 lightCol, glm::vec3 lightDir, float spec, float ambient);
 
     // Initialization function that can be called after
     // OpenGL has been setup

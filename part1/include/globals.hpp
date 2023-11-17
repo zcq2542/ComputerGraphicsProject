@@ -36,6 +36,8 @@ struct Global{
 	// Light object
 	Light gLight;
 
+    std::vector<Light> glights;
+
 	// House Object
 	std::string gHouseFileName = "./../common/objects/house/house_obj.obj";
 	// Chapel Object

@@ -121,6 +121,18 @@ glm::vec3 Camera::GetViewDirection() {
     return m_viewDirection;
 }
 
+glm::vec3 Camera::GetEyePosition() {
+    return m_eyePosition;
+}
+
+float Camera::GetHeadLightScope() {
+    return light_scope; 
+}
+
+glm::vec3 Camera::GetHeadLightCol() {
+    return headLightCol;
+}
+
 
 Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
@@ -131,6 +143,9 @@ Camera::Camera(){
     m_viewDirection = glm::vec3(0.0f, 0.0f, -1.0f);
 	// For now--our upVector always points up along the y-axis
     m_upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+    headLightCol = glm::vec3(0.8f, 0.8f, 0.8f);
+    light_scope = 0.1 * M_PI;
+    m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
 }
 
 glm::mat4 Camera::GetViewMatrix() const{

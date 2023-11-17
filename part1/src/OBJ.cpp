@@ -222,7 +222,7 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform3fv(lightPosLocation, 1, &g.gLight.mPosition[0]);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Setup light color
@@ -232,7 +232,7 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform3fv(lightColorLocation, 1, &g.gLight.mLightColor[0]);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Setup specular strength    
@@ -242,7 +242,7 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform1f(specularStrengthLocation, g.gLight.mSpecularStrength);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
     
     // Setup ambient intensity
@@ -252,7 +252,7 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform1f(ambientIntensityLocation, g.gLight.mAmbientIntensity);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Setup view direction
@@ -263,6 +263,37 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         std::cout << "Could not find u_ViewDirection" << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    // Setup eye position
+    GLint eyePositionLocation = glGetUniformLocation(mShaderID, "u_EyePosition");
+    if(eyePositionLocation >=0){
+        glUniform3fv(eyePositionLocation, 1, &g.gCamera.GetEyePosition()[0]);
+    }else{
+        std::cout << "Could not find u_EyePosition in " << mShaderID << std::endl;
+        //exit(EXIT_FAILURE);
+    }
+    
+    // Setup head light scope
+    GLint headLightScopeLocation = glGetUniformLocation(mShaderID, "u_HeadLightScope");
+    if(headLightScopeLocation >=0){
+        glUniform1f(headLightScopeLocation, g.gCamera.GetHeadLightScope());
+    }else{
+        std::cout << "Could not find u_headLightScope" << std::endl;
+        //exit(EXIT_FAILURE);
+    }
+
+    // Setup head light col
+    glm::vec3 l = g.gCamera.GetHeadLightCol();
+    std::cout << l.x << ", " << l.y << ", " << l.z << std::endl;
+    GLint headLightColLocation = glGetUniformLocation(mShaderID, "u_HeadLightCol");
+    if(headLightColLocation >=0){
+        glUniform3fv(headLightColLocation, 1, &g.gCamera.GetHeadLightCol()[0]);
+    }else{
+        std::cout << "Could not find u_headLightCol" << std::endl;
+        //exit(EXIT_FAILURE);
+    }
+
+
 
     // Setup shininess
     uniformName = "u_Material.shininess";
