@@ -32,7 +32,7 @@ public:
 
     // Render objects
     void Initialize();
-    void PreDraw(glm::vec3 objectCoord);
+    void PreDraw(glm::vec3 objectCoord, float rot = 0.0f);
     void Draw();
 
     // Get vertex and normal data
@@ -41,6 +41,15 @@ public:
 
     // Get texture data
     inline std::vector<GLfloat> getTextureArray() const { return mTextureArray; }
+
+    // Get min coordinate 
+    inline glm::vec3 getMinCoord() const { return mMin; }
+    // Get max coordinate 
+    inline glm::vec3 getMaxCoord() const { return mMax; }
+    // Get object coordinate
+    inline glm::vec3 getObjectCoord() const { return mObjectCoord; }
+    // Get object rotation
+    inline float getRot() const { return mRot; }
 
 private:    
     std::vector<GLfloat> mVertexIndex;
@@ -81,6 +90,11 @@ private:
     void VertexSpecification();
     int LoadMTLFile(std::string mtlFileName);
     void CalculateTB();
+
+    glm::vec3 mMin = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);      // Minimum (x, y, z) coordinates
+    glm::vec3 mMax = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);   // Maximum (x, y, z) coordinates
+    glm::vec3 mObjectCoord;  // origin of object being placed
+    float mRot;              // angle rotated along y-axis when being placed 
 };
 
 #endif

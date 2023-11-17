@@ -136,7 +136,7 @@ void PreDraw(){
 */
 void Draw(){
     // Draw objects
-    gHouse->PreDraw(glm::vec3(3.0f,0.0f,1.0f));
+    gHouse->PreDraw(glm::vec3(3.0f,0.0f,1.0f), 35.f);
     gHouse->Draw();
 
 	gChapel->PreDraw(glm::vec3(-5.0f,0.0f,-3.0f));
@@ -165,12 +165,29 @@ void getOpenGLVersionInfo(){
   std::cout << "Shading language: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 }
 
+/**
+ * Function to check collision between object and camera
+ * 
+ * @return bool whether we have a collision
+*/
+bool HasCollision(glm::vec3 cameraEyePosition, OBJ* object) {
+	// TODO: check rotation object->getRot()
+	return cameraEyePosition.x <= object->getMaxCoord().x + object->getObjectCoord().x + 0.1f
+		&& cameraEyePosition.z <= object->getMaxCoord().z + object->getObjectCoord().z + 0.1f
+		&& cameraEyePosition.x >= object->getMinCoord().x + object->getObjectCoord().x - 0.1f
+		&& cameraEyePosition.z >= object->getMinCoord().z + object->getObjectCoord().z - 0.1f;
+}
 
 /**
 * Function called in the Main application loop to handle user input
 *
 * @return void
 */
+// TODO: 
+// 1. detect collision 
+// 2. detect collision with rotation 
+// 3. slide along when collide
+// 4. check collision for all objects 
 void Input(){ 
     // Two static variables to hold the mouse position
     static int mouseX=g.gScreenWidth/2;
@@ -210,7 +227,18 @@ void Input(){
     // Update our position of the camera, move character with WASD
     float cameraSpeed = 0.02f;
     if (state[SDL_SCANCODE_W]) {
-        g.gCamera.MoveForward(cameraSpeed);
+		// std::cout << "camera position" << g.gCamera.GetEyeXPosition() << " " << g.gCamera.GetEyeZPosition() << "gChapel max coord" << gChapel->getMaxCoord().x << " " << gChapel->getMaxCoord().z << "gChapel min coord" << gChapel->getMinCoord().x << " " << gChapel->getMinCoord().z << std::endl;
+		// if (g.gCamera.GetEyeXPosition() <= gChapel->getMaxCoord().x - 5.f
+		// && g.gCamera.GetEyeZPosition() <= (gChapel->getMaxCoord()).z - 3.f
+		// && g.gCamera.GetEyeXPosition() >= (gChapel->getMinCoord()).x - 5.f
+		// && g.gCamera.GetEyeZPosition() >= (gChapel->getMinCoord()).z - 3.f) {
+		if (HasCollision(g.gCamera.GetEyePosition(), gChapel)) {
+			std::cout << "Collision!!!" << std::endl;
+			g.gCamera.MoveBackward(cameraSpeed);
+		} else {
+			std::cout << "Not Collide" << std::endl;
+			g.gCamera.MoveForward(cameraSpeed);
+		}
     }
     if (state[SDL_SCANCODE_S]) {
         g.gCamera.MoveBackward(cameraSpeed);

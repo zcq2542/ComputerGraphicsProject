@@ -75,6 +75,14 @@ OBJ::OBJ(std::string fileName) {
             mVertices.push_back(x);
             mVertices.push_back(y);
             mVertices.push_back(z);
+            
+            // update the min and max coordinates, used to construct bounding box for collision calculation
+            mMin.x = std::min(mMin.x, x);
+            mMin.y = std::min(mMin.y, y);
+            mMin.z = std::min(mMin.z, z);
+            mMax.x = std::max(mMax.x, x);
+            mMax.y = std::max(mMax.y, y);
+            mMax.z = std::max(mMax.z, z);
         } 
         if(type == "vt"){
             GLfloat u, v;
@@ -167,15 +175,17 @@ void OBJ::Initialize() {
 * 		 pipeline.
 * @return void
 */
-void OBJ::PreDraw(glm::vec3 objectCoord){
+void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
+    // update object coord and rot
+    mObjectCoord = objectCoord;
+    mRot = rot;
+
     // Use our shader
 	glUseProgram(mShaderID);
 
     // Model transformation by translating our object into world space
     // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,1.0f)); 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), objectCoord);
-    static float rot = 0.0f;
-    // rot += 0.1f; // Add a rotation
     model = glm::rotate(model,glm::radians(rot),glm::vec3(0.0f,1.0f,0.0f)); 
 
     // Retrieve our location of our Model Matrix
@@ -222,7 +232,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform3fv(lightPosLocation, 1, &g.gLight.mPosition[0]);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup light color
@@ -232,7 +241,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform3fv(lightColorLocation, 1, &g.gLight.mLightColor[0]);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup specular strength    
@@ -242,7 +250,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform1f(specularStrengthLocation, g.gLight.mSpecularStrength);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
     
     // Setup ambient intensity
@@ -252,7 +259,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform1f(ambientIntensityLocation, g.gLight.mAmbientIntensity);
     } else {
         std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup view direction
@@ -270,7 +276,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform3fv(eyePositionLocation, 1, &g.gCamera.GetEyePosition()[0]);
     }else{
         std::cout << "Could not find u_EyePosition in " << mShaderID << std::endl;
-        //exit(EXIT_FAILURE);
     }
     
     // Setup head light scope
@@ -279,18 +284,15 @@ void OBJ::PreDraw(glm::vec3 objectCoord){
         glUniform1f(headLightScopeLocation, g.gCamera.GetHeadLightScope());
     }else{
         std::cout << "Could not find u_headLightScope" << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup head light col
     glm::vec3 l = g.gCamera.GetHeadLightCol();
-    std::cout << l.x << ", " << l.y << ", " << l.z << std::endl;
     GLint headLightColLocation = glGetUniformLocation(mShaderID, "u_HeadLightCol");
     if(headLightColLocation >=0){
         glUniform3fv(headLightColLocation, 1, &g.gCamera.GetHeadLightCol()[0]);
     }else{
         std::cout << "Could not find u_headLightCol" << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
 
