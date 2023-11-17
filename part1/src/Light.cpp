@@ -20,6 +20,24 @@ Light::Light(){
     mAmbientIntensity = 0.3f;
 }
 
+Light::Light(glm::vec3 position, glm::vec3 lightColor, glm::vec3 lightDir, float SpecularStrength, float AmbientIntensity){
+    mPosition.x = position.x;
+    mPosition.y = position.y;
+    mPosition.z = position.z;
+
+    mLightColor.x = lightColor.x;
+    mLightColor.y = lightColor.y;
+    mLightColor.z = lightColor.z;
+
+    mLightDir.x = lightDir.x;
+    mLightDir.y = lightDir.y;
+    mLightDir.z = lightDir.z;
+
+    mSpecularStrength = SpecularStrength;
+    mAmbientIntensity = AmbientIntensity;
+
+}
+
 // Initialization function that can be called after
 // OpenGL has been setup
 void Light::Initialize()

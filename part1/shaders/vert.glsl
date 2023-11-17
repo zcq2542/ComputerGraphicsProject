@@ -15,6 +15,7 @@ uniform mat4 u_ViewMatrix;
 uniform mat4 u_Projection; // We'll use a perspective projection
 
 uniform vec3 u_ViewDirection; // camera view direction
+uniform vec3 u_EyePosition;
 
 // Uniform Light Variables
 uniform vec3 u_LightPos;
@@ -26,6 +27,7 @@ out vec2 v_textureCoords; // Pass texture coordinates to the fragment shader
 out vec3 TangentLightPos;
 out vec3 TangentViewPos;
 out vec3 TangentFragPos;
+out vec3 TangentHeadLightPos;
 
 mat3 calculateTBN() {
     vec3 T = normalize(vec3(u_ModelMatrix * vec4(tangents, 0.0)));
@@ -64,6 +66,7 @@ void main()
   TangentLightPos = transTBN * (u_Light[0].lightPos);
   TangentViewPos = transTBN * u_ViewDirection;
   TangentFragPos = transTBN * v_worldSpaceFragment;
+  TangentHeadLightPos = transTBN * u_EyePosition;
 
   // Compute the MVP matrix
   gl_Position = u_Projection * u_ViewMatrix * u_ModelMatrix * vec4(position,1.0f);
