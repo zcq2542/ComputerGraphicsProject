@@ -137,20 +137,26 @@ glm::vec3 Camera::GetHeadLightCol() {
 void Camera::CheckBattery(){
     std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     if(HeadLightOn == 1){
-        if(SDL_GetTicks() > ShutDownTime)
+        if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
-        else if(ShutDownTime - SDL_GetTicks() < 15000){
-            if(HeadLightOn == 1){
-                int min = 200;
-                int max = 1200;
-                int randomNumber = min + rand() % (max - min + 1);
-                RecoverTime = SDL_GetTicks() + randomNumber;
+            std::cout << "out of battery" << std::endl;
+        }
+        else if(ShutDownTime - SDL_GetTicks() < 15000 && SDL_GetTicks() > RecoverTime ){
+            int rd = rand() % 100;
+            if(rd > 60){ 
                 SwitchLight();
-            }
-            else if(SDL_GetTicks() > RecoverTime){
-                SwitchLight();
+                std::cout << "turn off" << std::endl;
             }
         }
+    }
+    else if(BatteryTime > 0){
+        int min = 200;
+        int max = 1200;
+        int randomNumber = min + rand() % (max - min + 1);
+        std::cout << "randomNuber: " << randomNumber << std::endl;
+        RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
+        SwitchLight();
+        std::cout << "turn on" << std::endl;
     }
 }
 
