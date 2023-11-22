@@ -136,6 +136,7 @@ void PreDraw(){
 */
 void Draw(){
     // Draw objects
+    g.gCamera.CheckBattery();
     gHouse->PreDraw(glm::vec3(3.0f,0.0f,1.0f));
     gHouse->Draw();
 

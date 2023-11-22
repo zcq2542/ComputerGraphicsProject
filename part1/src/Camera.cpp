@@ -3,6 +3,7 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtx/rotate_vector.hpp"
 #include <SDL2/SDL.h>
+#include <stdio.h>
 
 #include <iostream>
 
@@ -133,6 +134,47 @@ glm::vec3 Camera::GetHeadLightCol() {
     return headLightCol;
 }
 
+void Camera::CheckBattery(){
+    std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
+    if(HeadLightOn == 1){
+        if(SDL_GetTicks() > ShutDownTime){
+            SwitchLight();
+            std::cout << "out of battery" << std::endl;
+        }
+        else if(ShutDownTime - SDL_GetTicks() < 15000 && SDL_GetTicks() > RecoverTime ){
+            int rd = rand() % 100;
+            if(rd > 60){ 
+                SwitchLight();
+                std::cout << "turn off" << std::endl;
+            }
+        }
+    }
+    else if(BatteryTime > 0){
+        int min = 200;
+        int max = 1200;
+        int randomNumber = min + rand() % (max - min + 1);
+        std::cout << "randomNuber: " << randomNumber << std::endl;
+        RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
+        SwitchLight();
+        std::cout << "turn on" << std::endl;
+    }
+}
+
+void Camera::SwitchLight(){
+    if(HeadLightOn == 1){
+        BatteryTime = ShutDownTime - SDL_GetTicks();
+        HeadLightOn = 0;
+    }
+
+    else if(HeadLightOn == 0 && BatteryTime > 0){
+        ShutDownTime = SDL_GetTicks()+BatteryTime;
+        HeadLightOn = 1;
+    }
+}
+
+int Camera::GetIfLightOn(){
+    return HeadLightOn;
+}
 
 Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
@@ -145,7 +187,12 @@ Camera::Camera(){
     m_upVector = glm::vec3(0.0f, 1.0f, 0.0f);
     headLightCol = glm::vec3(0.8f, 0.8f, 0.8f);
     light_scope = 0.1 * M_PI;
-    m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
+    //m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
+    HeadLightOn = 1;
+    ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 60s.
+    RecoverTime = 0;
+    BatteryTime = 70;
+
 }
 
 glm::mat4 Camera::GetViewMatrix() const{
