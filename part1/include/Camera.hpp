@@ -33,6 +33,8 @@ public:
     void MoveDown(float speed);
     // Set the position for the camera
     void SetCameraEyePosition(float x, float y, float z);
+    // Set view direction
+    void SetViewDirection(float x, float y, float z);
     // Returns the Camera X Position where the eye is 
     float GetEyeXPosition();
     // Returns the Camera Y Position where the eye is 
@@ -49,6 +51,8 @@ public:
     glm::vec3 GetViewDirection();
     // Returns the eye position
     glm::vec3 GetEyePosition();
+    // Returns the initla eye postion
+    glm::vec3 GetEyeInitialPosition(); 
     // head light scope
     float GetHeadLightScope();
     // head light col
@@ -62,6 +66,8 @@ private:
     glm::vec2 m_oldMousePosition;
     // Where is our camera positioned
     glm::vec3 m_eyePosition;
+    // initial position for camera, used to reset view
+    glm::vec3 m_eyeInitialPosition;
     // What direction is the camera looking
     glm::vec3 m_viewDirection;
     // Which direction is 'up' in our world

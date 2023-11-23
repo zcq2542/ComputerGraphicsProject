@@ -94,6 +94,13 @@ void Camera::SetCameraEyePosition(float x, float y, float z){
     m_eyePosition.z = z;
 }
 
+// Set the view direction
+void Camera::SetViewDirection(float x, float y, float z) {
+    m_viewDirection.x = x;
+    m_viewDirection.y = y;
+    m_viewDirection.z = z;
+}
+
 float Camera::GetEyeXPosition(){
     return m_eyePosition.x;
 }
@@ -124,6 +131,10 @@ glm::vec3 Camera::GetViewDirection() {
 
 glm::vec3 Camera::GetEyePosition() {
     return m_eyePosition;
+}
+
+glm::vec3 Camera::GetEyeInitialPosition() {
+    return m_eyeInitialPosition;
 }
 
 float Camera::GetHeadLightScope() {
@@ -180,6 +191,7 @@ Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
 	// Position us at the origin.
     m_eyePosition = glm::vec3(0.0f, m_cameraYCoord, 6.0f);
+    m_eyeInitialPosition = m_eyePosition;
 	// Looking down along the z-axis initially.
 	// Remember, this is negative because we are looking 'into' the scene.
     m_viewDirection = glm::vec3(0.0f, 0.0f, -1.0f);

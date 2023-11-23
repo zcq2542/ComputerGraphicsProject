@@ -25,10 +25,7 @@
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
-OBJ* gHouse;
-OBJ* gChapel;
-OBJ* gWindmill;
-OBJ* gChalice;
+std::vector<OBJ*> gObjVector;
 
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
@@ -82,21 +79,15 @@ void InitializeProgram(){
     // Initialize Light
     g.gLight.Initialize();
 
-    // Initialize House Object
-    gHouse = new OBJ(g.gHouseFileName);
-    gHouse->Initialize();
-
-    // Initialize Chapel Object
-	gChapel = new OBJ(g.gChapelFileName);
-	gChapel->Initialize();
-
-    // Initialize Windmill Object
-	gWindmill = new OBJ(g.gWindmillFileName);
-	gWindmill->Initialize();
-
-	// Initialize Chalice Object
-	gChalice = new OBJ(g.gChaliceFileName);
-	gChalice->Initialize();
+	// Initialize objects
+	gObjVector.push_back(new OBJ(g.gHouseFileName));
+	gObjVector.push_back(new OBJ(g.gChapelFileName));
+	gObjVector.push_back(new OBJ(g.gWindmillFileName));
+	gObjVector.push_back(new OBJ(g.gChaliceFileName));
+	
+	for (auto& object : gObjVector) {
+		object->Initialize();
+	}
 }
 
 /**
@@ -119,7 +110,6 @@ void PreDraw(){
     glViewport(0, 0, g.gScreenWidth, g.gScreenHeight);
     //glClearColor( 0.2f, 0.2f, 0.2f, 1.f );
     glClearColor( 0.0f, 0.0f, 0.0f, 1.f );
-	// glClearColor( 0.f, 0.f, 0.f, 1.f );
 
     // Clear color buffer and Depth Buffer
   	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -137,17 +127,21 @@ void PreDraw(){
 void Draw(){
     // Draw objects
     g.gCamera.CheckBattery();
-    gHouse->PreDraw(glm::vec3(3.0f,0.0f,1.0f));
-    gHouse->Draw();
+	// House
+	gObjVector[0]->PreDraw(glm::vec3(3.0f,0.0f,1.0f), 35.f);
+    gObjVector[0]->Draw();
 
-	gChapel->PreDraw(glm::vec3(-5.0f,0.0f,-3.0f));
-    gChapel->Draw();
+	// Chapel
+	gObjVector[1]->PreDraw(glm::vec3(-5.0f,0.0f,-3.0f), 45.f);
+    gObjVector[1]->Draw();
 
-	gWindmill->PreDraw(glm::vec3(5.0f,1.0f,-3.0f));
-    gWindmill->Draw();
+	// Windmill
+	gObjVector[2]->PreDraw(glm::vec3(5.0f,1.0f,-3.0f));
+    gObjVector[2]->Draw();
 
-	gChalice->PreDraw(glm::vec3(0.0f,-0.4f,-1.0f));
-    gChalice->Draw();
+	// Chalice
+	gObjVector[3]->PreDraw(glm::vec3(0.0f,-0.4f,-1.0f));
+    gObjVector[3]->Draw();
 
     // Draw light
     g.gLight.PreDraw();
@@ -166,12 +160,39 @@ void getOpenGLVersionInfo(){
   std::cout << "Shading language: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 }
 
+/**
+ * Function to check collision between objects and camera
+ * 
+ * @return bool whether we have a collision
+*/
+bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
+	for (auto& object : gObjVector) {
+		// 1. Translate the cameraEyePosition so that the center of rotation is at the origin.
+		// 2. Rotate the translated cameraEyePosition using a rotation matrix.
+		// 3. Compare with the object's original max and min coord
+		glm::mat4 translationMatrix1 = glm::translate(glm::mat4(1.0f), -object->getObjectCoord());
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -glm::radians(object->getRot()), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
+		glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
+		// std::cout << cameraEyePosition.x << " " << cameraEyePosition.y << " " << cameraEyePosition.z << std::endl;
+		// std::cout << rotatedCameraEyePosition.x << " " << rotatedCameraEyePosition.y << " " << rotatedCameraEyePosition.z << std::endl;
+		if (rotatedCameraEyePosition.x <= object->getMaxCoord().x + 0.1f 
+		&& rotatedCameraEyePosition.z <= object->getMaxCoord().z + 0.1f
+		&& rotatedCameraEyePosition.x >= object->getMinCoord().x - 0.1f
+		&& rotatedCameraEyePosition.z >= object->getMinCoord().z - 0.1f) {
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
 * Function called in the Main application loop to handle user input
 *
 * @return void
 */
+// TODO: resolve collision, slide along when collide
 void Input(){ 
     // Two static variables to hold the mouse position
     static int mouseX=g.gScreenWidth/2;
@@ -183,7 +204,6 @@ void Input(){
 	//Handle events on queue
 	while(SDL_PollEvent( &e ) != 0){
 		// If users posts an event to quit
-		// An example is hitting the "x" in the corner of the window.
 		if(e.type == SDL_QUIT){
 			std::cout << "Goodbye! (Leaving MainApplicationLoop())" << std::endl;
 			g.gQuit = true;
@@ -211,17 +231,46 @@ void Input(){
     // Update our position of the camera, move character with WASD
     float cameraSpeed = 0.02f;
     if (state[SDL_SCANCODE_W]) {
-        g.gCamera.MoveForward(cameraSpeed);
+		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
+			std::cout << "Collision!!!\n";
+			g.gCamera.MoveBackward(3*cameraSpeed); // pull back further 
+		} else {
+			g.gCamera.MoveForward(cameraSpeed);
+		}
     }
     if (state[SDL_SCANCODE_S]) {
-        g.gCamera.MoveBackward(cameraSpeed);
+        if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
+			std::cout << "Back Collision!!!" << std::endl;
+			g.gCamera.MoveForward(3*cameraSpeed);
+		} else {
+			g.gCamera.MoveBackward(cameraSpeed);
+		}
     }
     if (state[SDL_SCANCODE_A]) {
-		g.gCamera.MoveLeft(cameraSpeed);
+		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
+			std::cout << "Left Collision!!!" << std::endl;
+			g.gCamera.MoveRight(3*cameraSpeed);
+		} else {
+			g.gCamera.MoveLeft(cameraSpeed);
+		}
     }
     if (state[SDL_SCANCODE_D]) {
-		g.gCamera.MoveRight(cameraSpeed);
+		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
+			std::cout << "Right Collision!!!" << std::endl;
+			g.gCamera.MoveLeft(3*cameraSpeed);
+		} else {
+			g.gCamera.MoveRight(cameraSpeed);
+		}
     }
+
+	// Press R to reset position
+	if (state[SDL_SCANCODE_R]) {
+		SDL_Delay(250); 
+		g.gCamera.SetCameraEyePosition(g.gCamera.GetEyeInitialPosition().x,
+		 								g.gCamera.GetEyeInitialPosition().y,
+		  								g.gCamera.GetEyeInitialPosition().z);
+		g.gCamera.SetViewDirection(0.0f, 0.0f, -1.0f);
+	}
 
 	// Press TAB to switch between fill and line mode
     if (state[SDL_SCANCODE_TAB]) {
@@ -298,10 +347,11 @@ void CleanUp(){
 	SDL_DestroyWindow(g.gGraphicsApplicationWindow);
 	g.gGraphicsApplicationWindow = nullptr;
 
-	delete gHouse;
-	delete gChapel;
-	delete gWindmill;
-	delete gChalice;
+	//Delete all objects in gObjVector
+	for (auto& object : gObjVector) {
+        delete object;
+    }
+    gObjVector.clear();
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -319,6 +369,7 @@ int main( int argc, char* args[] ){
     std::cout << "Use WASD keys to move forward, left, backward, and right\n";
 	std::cout << "Use mouse to look around\n";
     std::cout << "Use TAB to toggle wireframe\n";
+	std::cout << "Press R to reset player position\n";
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program
