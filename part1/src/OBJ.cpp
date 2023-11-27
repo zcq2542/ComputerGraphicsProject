@@ -290,10 +290,20 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
     // Setup head light on
     GLint headLightOnLocation = glGetUniformLocation(mShaderID, "u_HeadLightOn");
     if(headLightOnLocation >=0){
-        std::cout << "u_HeadLightOn" << g.gCamera.GetIfLightOn() << std::endl;
+        //std::cout << "u_HeadLightOn" << g.gCamera.GetIfLightOn() << std::endl;
         glUniform1i(headLightOnLocation, g.gCamera.GetIfLightOn());
     }else{
         std::cout << "Could not find u_headLightOn" << std::endl;
+        //exit(EXIT_FAILURE);
+    }
+
+    // Setup head light Strength
+    GLint headLightStrengthLocation = glGetUniformLocation(mShaderID, "u_HeadLightStrength");
+    if(headLightStrengthLocation >=0){
+        //std::cout << "u_HeadLightStrength" << g.gCamera.GetLightStrength() << std::endl;
+        glUniform1f(headLightStrengthLocation, g.gCamera.GetLightStrength());
+    }else{
+        std::cout << "Could not find u_headLightStrength" << std::endl;
         //exit(EXIT_FAILURE);
     }
 
