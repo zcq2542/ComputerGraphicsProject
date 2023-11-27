@@ -17,8 +17,6 @@ struct STLFile;
 
 struct Global{
 	// Screen Dimensions
-	// int gScreenWidth 						= 640;
-	// int gScreenHeight 						= 480;
 	int gScreenWidth 						= 1200;
 	int gScreenHeight 						= 720;
 	SDL_Window* gGraphicsApplicationWindow 	= nullptr;

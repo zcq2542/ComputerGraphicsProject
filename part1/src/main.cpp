@@ -175,8 +175,6 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
 
 		glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
 		glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
-		// std::cout << cameraEyePosition.x << " " << cameraEyePosition.y << " " << cameraEyePosition.z << std::endl;
-		// std::cout << rotatedCameraEyePosition.x << " " << rotatedCameraEyePosition.y << " " << rotatedCameraEyePosition.z << std::endl;
 		if (rotatedCameraEyePosition.x <= object->getMaxCoord().x + 0.1f 
 		&& rotatedCameraEyePosition.z <= object->getMaxCoord().z + 0.1f
 		&& rotatedCameraEyePosition.x >= object->getMinCoord().x - 0.1f
@@ -192,7 +190,6 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
 *
 * @return void
 */
-// TODO: resolve collision, slide along when collide
 void Input(){ 
     // Two static variables to hold the mouse position
     static int mouseX=g.gScreenWidth/2;
@@ -231,33 +228,30 @@ void Input(){
     // Update our position of the camera, move character with WASD
     float cameraSpeed = 0.02f;
     if (state[SDL_SCANCODE_W]) {
-		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
-			std::cout << "Collision!!!\n";
-			g.gCamera.MoveBackward(3*cameraSpeed); // pull back further 
+		if (HasCollision(g.gCamera.CheckForward(cameraSpeed), gObjVector)) {
+			// move on the opposite direction when in collision and was moving forward
+			g.gCamera.MoveBackward(cameraSpeed);
 		} else {
 			g.gCamera.MoveForward(cameraSpeed);
 		}
     }
     if (state[SDL_SCANCODE_S]) {
-        if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
-			std::cout << "Back Collision!!!" << std::endl;
-			g.gCamera.MoveForward(3*cameraSpeed);
+        if (HasCollision(g.gCamera.CheckBackward(cameraSpeed), gObjVector)) {
+			g.gCamera.MoveForward(cameraSpeed);
 		} else {
 			g.gCamera.MoveBackward(cameraSpeed);
 		}
     }
     if (state[SDL_SCANCODE_A]) {
-		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
-			std::cout << "Left Collision!!!" << std::endl;
-			g.gCamera.MoveRight(3*cameraSpeed);
+		if (HasCollision(g.gCamera.CheckLeft(cameraSpeed), gObjVector)) {
+			// g.gCamera.MoveRight(cameraSpeed);
 		} else {
 			g.gCamera.MoveLeft(cameraSpeed);
 		}
     }
     if (state[SDL_SCANCODE_D]) {
-		if (HasCollision(g.gCamera.GetEyePosition(), gObjVector)) {
-			std::cout << "Right Collision!!!" << std::endl;
-			g.gCamera.MoveLeft(3*cameraSpeed);
+		if (HasCollision(g.gCamera.CheckRight(cameraSpeed), gObjVector)) {
+			// g.gCamera.MoveLeft(cameraSpeed);
 		} else {
 			g.gCamera.MoveRight(cameraSpeed);
 		}
@@ -364,8 +358,6 @@ void CleanUp(){
 * @return program status
 */
 int main( int argc, char* args[] ){
-	std::cout << "Generating environment..." << std::endl;
-
     std::cout << "Use WASD keys to move forward, left, backward, and right\n";
 	std::cout << "Use mouse to look around\n";
     std::cout << "Use TAB to toggle wireframe\n";
@@ -373,6 +365,7 @@ int main( int argc, char* args[] ){
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program
+	std::cout << "Generating environment..." << std::endl;
 	InitializeProgram();
 
 	// 2. Call the main application loop

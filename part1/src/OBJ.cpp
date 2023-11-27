@@ -43,7 +43,7 @@ OBJ::OBJ(std::string fileName) {
             iss >> mtlFileName;
             std::string mtlFilePath = filePath.parent_path().string() + "/" + mtlFileName;
             // load and parse mtl file
-            std::cout << "mtl file path: " << mtlFilePath << std::endl;
+            // std::cout << "mtl file path: " << mtlFilePath << std::endl;
             // check if success
             hasMTLFile = LoadMTLFile(mtlFilePath);
             // load diffuse texture file if exist 

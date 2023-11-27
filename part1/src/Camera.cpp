@@ -2,14 +2,16 @@
 
 #include "glm/gtx/transform.hpp"
 #include "glm/gtx/rotate_vector.hpp"
+#include <algorithm>
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
 #include <iostream>
 
-// TODO: 
-// 1. mouse up and down rotation limit 
 void Camera::MouseLook(int mouseX, int mouseY){
+    // set limit for mouseY
+    mouseY = std::clamp(mouseY, -50, 600);
+
     // Record our new position as a vector
     glm::vec2 newMousePosition(mouseX, mouseY);
 
@@ -77,6 +79,30 @@ void Camera::WalkCycle(float speed) {
     float verticalOffset = m_walkCycleMaxHeight * sin(SDL_GetTicks() * speed * 0.35f); 
     // Adjust the initial height and add the vertical offset
     m_eyePosition.y = m_cameraYCoord + verticalOffset; 
+}
+
+glm::vec3 Camera::CheckForward(float speed){
+    return glm::vec3(m_eyePosition.x + speed * m_viewDirection.x,
+                    m_eyePosition.y,
+                    m_eyePosition.z + speed * m_viewDirection.z);
+}
+
+glm::vec3 Camera::CheckBackward(float speed){
+    return glm::vec3(m_eyePosition.x - speed * m_viewDirection.x,
+                    m_eyePosition.y,
+                    m_eyePosition.z - speed * m_viewDirection.z);
+}
+
+glm::vec3 Camera::CheckLeft(float speed){
+    // Compute the right vector
+    glm::vec3 rightVector = glm::normalize(glm::cross(m_viewDirection, m_upVector));
+    return glm::vec3(m_eyePosition - speed * rightVector);
+}
+
+glm::vec3 Camera::CheckRight(float speed){
+    // Compute the right vector
+    glm::vec3 rightVector = glm::normalize(glm::cross(m_viewDirection, m_upVector));
+    return glm::vec3(m_eyePosition + speed * rightVector);
 }
 
 void Camera::MoveUp(float speed){

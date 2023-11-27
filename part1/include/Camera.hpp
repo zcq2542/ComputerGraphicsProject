@@ -31,6 +31,11 @@ public:
     void WalkCycle(float speed);
     void MoveUp(float speed);
     void MoveDown(float speed);
+    // Check camera position IF moving in that direction
+    glm::vec3 CheckForward(float speed);
+    glm::vec3 CheckBackward(float speed);
+    glm::vec3 CheckLeft(float speed);
+    glm::vec3 CheckRight(float speed);
     // Set the position for the camera
     void SetCameraEyePosition(float x, float y, float z);
     // Set view direction
@@ -77,7 +82,7 @@ private:
     // with modifying this value.
     glm::vec3 m_upVector;
     // initial height of camera position 
-    float m_cameraYCoord = -0.2f; 
+    float m_cameraYCoord = -0.35f; 
     // max height for walk cycle
     float m_walkCycleMaxHeight = 0.03f;
     float light_scope;
