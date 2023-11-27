@@ -148,25 +148,32 @@ glm::vec3 Camera::GetHeadLightCol() {
 void Camera::CheckBattery(){
     //std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     if(HeadLightOn == 1){
+        if(SDL_GetTicks() < ShutDownTime){
+            BatteryTime = ShutDownTime - SDL_GetTicks();
+            //std::cout << "BatteryTime: " << BatteryTime << std::endl;
+            LightStrength = BatteryTime / 15000.0f;
+            //std::cout << "LightStrength: " << LightStrength << std::endl;
+        }
         if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
             std::cout << "out of battery" << std::endl;
         }
         else if(ShutDownTime - SDL_GetTicks() < 15000 && SDL_GetTicks() > RecoverTime ){
             int rd = rand() % 100;
-            if(rd > 60){ 
-                SwitchLight();
+            if(rd > 10){ // prob turn off light.
+                SwitchLight(); 
             }
         }
     }
     else if(BatteryTime > 0){
-        int min = 200;
-        int max = 1200;
+        int min = 100;
+        int max = 300;
         int randomNumber = min + rand() % (max - min + 1);
         //std::cout << "randomNuber: " << randomNumber << std::endl;
-        //std::cout << "BatteryTime: " << BatteryTime << std::endl; 
-        LightStrength = BatteryTime / 15000.0f;
-        //std::cout << "LightStrength: " << LightStrength << std::endl;
+        int rd = rand() % 100;
+        if(rd < 30){
+            randomNumber += 1000 + rand() % (1000);
+        }
         RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
         SwitchLight();
     }
@@ -208,9 +215,9 @@ Camera::Camera(){
     light_scope = 0.1 * M_PI;
     //m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
     HeadLightOn = 1;
-    ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 70s.
     RecoverTime = 0;
-    BatteryTime = 70;
+    BatteryTime = 30;
+    ShutDownTime = SDL_GetTicks() + BatteryTime * 1000; // batery time is 70s.
     LightStrength = 1.0f;
 
 }
