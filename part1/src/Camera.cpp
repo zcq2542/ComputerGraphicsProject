@@ -146,7 +146,7 @@ glm::vec3 Camera::GetHeadLightCol() {
 }
 
 void Camera::CheckBattery(){
-    std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
+    //std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     if(HeadLightOn == 1){
         if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
@@ -156,7 +156,6 @@ void Camera::CheckBattery(){
             int rd = rand() % 100;
             if(rd > 60){ 
                 SwitchLight();
-                std::cout << "turn off" << std::endl;
             }
         }
     }
@@ -164,10 +163,12 @@ void Camera::CheckBattery(){
         int min = 200;
         int max = 1200;
         int randomNumber = min + rand() % (max - min + 1);
-        std::cout << "randomNuber: " << randomNumber << std::endl;
+        //std::cout << "randomNuber: " << randomNumber << std::endl;
+        //std::cout << "BatteryTime: " << BatteryTime << std::endl; 
+        LightStrength = BatteryTime / 15000.0f;
+        //std::cout << "LightStrength: " << LightStrength << std::endl;
         RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
         SwitchLight();
-        std::cout << "turn on" << std::endl;
     }
 }
 
@@ -175,16 +176,22 @@ void Camera::SwitchLight(){
     if(HeadLightOn == 1){
         BatteryTime = ShutDownTime - SDL_GetTicks();
         HeadLightOn = 0;
+        //std::cout << "turn off" << std::endl;
     }
 
     else if(HeadLightOn == 0 && BatteryTime > 0){
         ShutDownTime = SDL_GetTicks()+BatteryTime;
         HeadLightOn = 1;
+        //std::cout << "turn on" << std::endl;
     }
 }
 
 int Camera::GetIfLightOn(){
     return HeadLightOn;
+}
+
+float Camera::GetLightStrength(){
+    return LightStrength;
 }
 
 Camera::Camera(){
@@ -201,9 +208,10 @@ Camera::Camera(){
     light_scope = 0.1 * M_PI;
     //m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
     HeadLightOn = 1;
-    ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 60s.
+    ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 70s.
     RecoverTime = 0;
     BatteryTime = 70;
+    LightStrength = 1.0f;
 
 }
 

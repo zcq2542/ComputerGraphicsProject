@@ -37,6 +37,7 @@ uniform vec3 u_HeadLightCol;
 uniform float u_HeadLightScope;
 uniform bool u_HasSpecularTexture;
 uniform int u_HeadLightOn;
+uniform float u_HeadLightStrength;
 
 float calculateAngle(vec3 A, vec3 B) {
     float dotProduct = dot(normalize(A), normalize(B));
@@ -74,6 +75,7 @@ vec4 HeadLight(){
         // Diffuse lighting
         if(angle < u_HeadLightScope){
             float headLightStren = -1/(u_HeadLightScope * u_HeadLightScope) * (angle*angle) + 1;
+            headLightStren *= u_HeadLightStrength;
             // Calculate distance from light source to fragment
             float distance = length(TangentHeadLightPos - TangentFragPos);
 

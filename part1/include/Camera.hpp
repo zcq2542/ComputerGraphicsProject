@@ -60,6 +60,7 @@ public:
     void CheckBattery();
     void SwitchLight();
     int GetIfLightOn();
+    float GetLightStrength();
 private:
 
     // Track the old mouse position
@@ -86,6 +87,7 @@ private:
     Uint32 ShutDownTime; //= SDL_GetTicks() + 70 * 1000; // batery time is 60s.
     Uint32 RecoverTime;// = 0;
     int BatteryTime;// = 70;
+    float LightStrength;
 };
 
 
