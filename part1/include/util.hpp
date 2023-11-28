@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 
 // vvvvvvvvvvvvvvvvvvv Error Handling Routines vvvvvvvvvvvvvvv
@@ -46,5 +47,13 @@ GLuint CompileShader(GLuint type, const std::string& source);
 * @return id of the program Object
 */
 GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
+
+/**
+ * Creates a array of possible (x,z) coordinates to place objects and return an array 
+ * with 4 random coordinates that can be used to place 4 objects
+ * 
+ * @return array of 4 random coordinates
+*/
+std::vector<glm::vec2> RandomObjectsPlacement();
 
 #endif

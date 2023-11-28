@@ -26,6 +26,7 @@
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
 std::vector<OBJ*> gObjVector;
+std::vector<glm::vec2> gSelectedVecs;
 
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
@@ -88,6 +89,9 @@ void InitializeProgram(){
 	for (auto& object : gObjVector) {
 		object->Initialize();
 	}
+
+	// Initialize coordinates to place objects
+	gSelectedVecs = RandomObjectsPlacement();
 }
 
 /**
@@ -128,19 +132,19 @@ void Draw(){
     // Draw objects
     g.gCamera.CheckBattery();
 	// House
-	gObjVector[0]->PreDraw(glm::vec3(3.0f,0.0f,1.0f), 35.f);
-    gObjVector[0]->Draw();
+	gObjVector[0]->PreDraw(glm::vec3(gSelectedVecs[0].x, -gObjVector[0]->getMinCoord().y, gSelectedVecs[0].y), 30.f);
+	gObjVector[0]->Draw();
 
 	// Chapel
-	gObjVector[1]->PreDraw(glm::vec3(-5.0f,0.0f,-3.0f), 45.f);
+	gObjVector[1]->PreDraw(glm::vec3(gSelectedVecs[1].x, -gObjVector[1]->getMinCoord().y, gSelectedVecs[1].y), 90.f);
     gObjVector[1]->Draw();
 
 	// Windmill
-	gObjVector[2]->PreDraw(glm::vec3(5.0f,1.0f,-3.0f));
+	gObjVector[2]->PreDraw(glm::vec3(gSelectedVecs[2].x, -gObjVector[2]->getMinCoord().y, gSelectedVecs[2].y), 45.f);
     gObjVector[2]->Draw();
 
 	// Chalice
-	gObjVector[3]->PreDraw(glm::vec3(0.0f,-0.4f,-1.0f));
+	gObjVector[3]->PreDraw(glm::vec3(gSelectedVecs[3].x, -gObjVector[3]->getMinCoord().y, gSelectedVecs[3].y));
     gObjVector[3]->Draw();
 
     // Draw light
@@ -365,7 +369,7 @@ int main( int argc, char* args[] ){
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program
-	std::cout << "Generating environment..." << std::endl;
+	std::cout << "Generating environment, please wait..." << std::endl;
 	InitializeProgram();
 
 	// 2. Call the main application loop

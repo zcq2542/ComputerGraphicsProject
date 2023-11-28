@@ -82,7 +82,7 @@ private:
     // with modifying this value.
     glm::vec3 m_upVector;
     // initial height of camera position 
-    float m_cameraYCoord = -0.35f; 
+    float m_cameraYCoord = 0.35f; 
     // max height for walk cycle
     float m_walkCycleMaxHeight = 0.03f;
     float light_scope;

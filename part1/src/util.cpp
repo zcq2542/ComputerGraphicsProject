@@ -2,6 +2,9 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
+#include <random>
+#include <glm/glm.hpp>
 #include <glad/glad.h>
 
 // vvvvvvvvvvvvvvvvvvv Error Handling Routines vvvvvvvvvvvvvvv
@@ -144,5 +147,38 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
     glDeleteShader(myFragmentShader);
 
     return programObject;
+}
+
+/**
+ * Creates a array of possible (x,z) coordinates to place objects and return an array 
+ * with 4 random coordinates that can be used to place 4 objects
+ * 
+ * @return array of 4 random coordinates
+*/
+std::vector<glm::vec2> RandomObjectsPlacement() {
+    std::vector<glm::vec2> selectableCoordsArray; // x, z coordinate
+
+    // Map defined as 50.f by 50.f, possible placement for objects, min 5.f apart from each other and from the boundary
+    for (float x = -20.f; x <= 20.f; x += 5.0f) {
+        for (float y = -20.f; y <= 20.f; y += 5.0f) {
+            selectableCoordsArray.push_back(glm::vec2(x, y));
+        }
+    }
+
+    // Shuffle the array
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(selectableCoordsArray.begin(), selectableCoordsArray.end(), g);
+
+    // Pick the first 4 nonidentical glm::vec2
+    std::vector<glm::vec2> selectedVecs(selectableCoordsArray.begin(), selectableCoordsArray.begin() + 4);
+
+    // Print the selected glm::vec2
+    std::cout << "selectedVecs: " << std::endl;
+    for (const auto& vec : selectedVecs) {
+        std::cout << "(" << vec.x << ", " << vec.y << ")\n";
+    }
+
+    return selectedVecs;
 }
 

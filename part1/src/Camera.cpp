@@ -223,7 +223,7 @@ float Camera::GetLightStrength(){
 Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
 	// Position us at the origin.
-    m_eyePosition = glm::vec3(0.0f, m_cameraYCoord, 6.0f);
+    m_eyePosition = glm::vec3(0.0f, m_cameraYCoord, 0.0f);
     m_eyeInitialPosition = m_eyePosition;
 	// Looking down along the z-axis initially.
 	// Remember, this is negative because we are looking 'into' the scene.
@@ -237,7 +237,7 @@ Camera::Camera(){
     ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 70s.
     RecoverTime = 0;
     BatteryTime = 70;
-    LightStrength = 1.0f;
+    LightStrength = 1.5f;
 
 }
 
