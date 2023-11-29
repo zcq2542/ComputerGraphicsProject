@@ -25,10 +25,12 @@
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
+
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
 std::vector<glm::vec2> gTreesCoords;
 OBJ* grass;
+std::vector<OBJ*> gBatteryOBJs;
 
 BillboardList* trees;
 /**
@@ -80,8 +82,29 @@ void InitializeProgram(){
 		exit(1);
 	}
 
-    // // Initialize Light
-    // g.gLight.Initialize();
+    // Initialize Light
+    //g.gLight.Initialize();
+   
+    glm::vec3 BatteryCol = glm::vec3(0.3, 1.0, 0.1);
+
+    g.gBatteries.push_back(Light(glm::vec3(1, -1, -1), BatteryCol));
+    g.gBatteries.push_back(Light(glm::vec3(-1, -1, -1), BatteryCol));
+    g.gBatteries.push_back(Light(glm::vec3(3, -1, 3), BatteryCol));
+
+    for(auto& Battery : g.gBatteries){
+        Battery.Initialize();
+    }
+    std::cout << "Battery(light) Initialize" << std::endl;
+
+    //for(int i = 0; i < 4; ++i){
+        gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
+    //}
+    //OBJ obj1 = OBJ(g.gBatteryFileName);
+    std::cout << "Battery(OBJ) emplace" << std::endl;
+	for (auto& object : gBatteryOBJs) {
+		object->Initialize();
+	}
+    std::cout << "Battery(OBJ) Initialize" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -92,6 +115,7 @@ void InitializeProgram(){
 	for (auto& object : gObjVector) {
 		object->Initialize();
 	}
+    std::cout << "(OBJ) Initialize" << std::endl;
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
@@ -143,6 +167,8 @@ void PreDraw(){
 void Draw(){
     // Draw objects
     g.gCamera.CheckBattery();
+
+    //std::cout << "(OBJ) start Draw" << std::endl;
 	// House
 	gObjVector[0]->PreDraw(glm::vec3(gSelectedVecs[0].x, -gObjVector[0]->getMinCoord().y, gSelectedVecs[0].y), 30.f);
 	gObjVector[0]->Draw();
@@ -170,6 +196,20 @@ void Draw(){
     // Draw trees
     trees->PreDraw();
     trees->Draw();
+    //std::cout << "(OBJ) Draw" << std::endl;
+
+    for(int i = 0; i < gBatteryOBJs.size(); ++i){
+        gBatteryOBJs[i]->PreDraw(glm::vec3(0, -gBatteryOBJs[i]->getMinCoord().y, 0));
+        gBatteryOBJs[i]->Draw();
+    }
+
+    // Draw light
+    //g.gLight.PreDraw();
+    //g.gLight.Draw();
+    for(int i = 0; i < g.gBatteries.size(); ++i){
+        g.gBatteries[i].PreDraw();
+        g.gBatteries[i].Draw();
+    }
 }
 
 /**

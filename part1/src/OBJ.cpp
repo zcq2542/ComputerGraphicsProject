@@ -46,9 +46,10 @@ OBJ::OBJ(std::string fileName) {
             iss >> mtlFileName;
             std::string mtlFilePath = filePath.parent_path().string() + "/" + mtlFileName;
             // load and parse mtl file
-            // std::cout << "mtl file path: " << mtlFilePath << std::endl;
+             std::cout << "mtl file path: " << mtlFilePath << std::endl;
             // check if success
             hasMTLFile = LoadMTLFile(mtlFilePath);
+             std::cout << "load mtl" << std::endl;
             // load diffuse texture file if exist 
             if (!mMaterial.diffuseTexture.empty()) {
                 std::string diffuseTextureFile = filePath.parent_path().string() + "/" + mMaterial.diffuseTexture;
@@ -130,6 +131,7 @@ OBJ::OBJ(std::string fileName) {
         }
     }
     inFile.close();
+    std::cout << "succeed create OBJ" << std::endl;
 }
 
 // Destructor 
@@ -429,6 +431,15 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         exit(EXIT_FAILURE);
         }
     }
+    GLint u_normalTextureEmptyLocation = glGetUniformLocation(mShaderID, "u_BumpMapEmpty");
+        if(u_normalTextureEmptyLocation>=0){
+            // Setup the slot for the texture
+            glUniform1i(u_normalTextureEmptyLocation,mMaterial.normalTexture.empty());
+        }else{
+            std::cout << "Could not find" << "u_BumpMapEmpty" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
 
     // Bind specular texture
     if (!mMaterial.specularTexture.empty()) {
@@ -611,6 +622,11 @@ int OBJ::LoadMTLFile(std::string mtlFileName) {
 }
 
 void OBJ::CalculateTB(){
+    std::cout << "mMaterial.normalTexture: " << mMaterial.normalTexture.empty() << std::endl;
+    if(mMaterial.normalTexture.empty()) {
+        std::cout << "no texture normal" << std::endl;
+        return;
+    }
     glm::vec3 tangent;
     glm::vec3 bitangent;
     for(int i = 0; i < mVertexIndex.size(); i+=3){
