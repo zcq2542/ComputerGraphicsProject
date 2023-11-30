@@ -67,6 +67,7 @@ public:
     int GetIfLightOn();
     float GetLightStrength();
     void CollectBattery();
+    void GetBatteryInfo();
 
 private:
 

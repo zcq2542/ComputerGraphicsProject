@@ -174,6 +174,12 @@ glm::vec3 Camera::GetHeadLightCol() {
 void Camera::CheckBattery(){
     //std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     if(HeadLightOn == 1){
+        if(SDL_GetTicks() < ShutDownTime){
+            BatteryTime = (int)(ShutDownTime - SDL_GetTicks())/1000;
+            //std::cout << "BatteryTime: " << BatteryTime << std::endl;
+            //LightStrength = BatteryTime / 15000.0f;
+            //std::cout << "LightStrength: " << LightStrength << std::endl;
+        }
         if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
             std::cout << "Out of battery!" << std::endl;
@@ -183,6 +189,9 @@ void Camera::CheckBattery(){
             if(rd > 60){ 
                 SwitchLight();
             }
+        }
+        else if(ShutDownTime - SDL_GetTicks() > 15000){
+            LightStrength = 1.5;
         }
     }
     else if(BatteryTime > 0){
@@ -222,7 +231,13 @@ float Camera::GetLightStrength(){
 
 void Camera::CollectBattery(){
     BatteryTime += 30;
-    ShutDownTime += 30;
+    ShutDownTime += 30 * 1000;
+}
+
+void Camera::GetBatteryInfo(){
+    std::cout << "BatteryTime: " << BatteryTime << std::endl;
+    std::cout << "ShutDownTime: " << ShutDownTime << std::endl;
+
 }
 
 Camera::Camera(){

@@ -434,6 +434,7 @@ void Input(){
             //delete gBatteryOBJs[i];
             gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
             //--i;
+            g.gCamera.GetBatteryInfo();
             break;
         }
     }
