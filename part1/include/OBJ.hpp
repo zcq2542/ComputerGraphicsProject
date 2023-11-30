@@ -93,7 +93,7 @@ private:
 
     glm::vec3 mMin = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);      // Minimum (x, y, z) coordinates
     glm::vec3 mMax = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);   // Maximum (x, y, z) coordinates
-    glm::vec3 mObjectCoord;  // origin of object being placed
+    glm::vec3 mObjectCoord = glm::vec3(0, 0, 0);  // origin of object being placed
     float mRot;              // angle rotated along y-axis when being placed 
 
     bool mDrawGrass = false;            // check if we are drawing grass

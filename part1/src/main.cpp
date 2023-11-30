@@ -96,15 +96,15 @@ void InitializeProgram(){
     }
     std::cout << "Battery(light) Initialize" << std::endl;
 
-    //for(int i = 0; i < 4; ++i){
+    for(int i = 0; i < 4; ++i){
         gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
-    //}
+    }
     //OBJ obj1 = OBJ(g.gBatteryFileName);
     std::cout << "Battery(OBJ) emplace" << std::endl;
 	for (auto& object : gBatteryOBJs) {
 		object->Initialize();
 	}
-    std::cout << "Battery(OBJ) Initialize" << std::endl;
+    std::cout << gBatteryOBJs.size() << " Battery(OBJ) Initialize" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -198,8 +198,11 @@ void Draw(){
     trees->Draw();
     //std::cout << "(OBJ) Draw" << std::endl;
 
+    //std::cout << "gBatteryOBJs.size(): " << gBatteryOBJs.size() << std::endl;
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
-        gBatteryOBJs[i]->PreDraw(glm::vec3(1.0, -gBatteryOBJs[i]->getMinCoord().y, 1.0));
+        //std::cout << "coor" << gBatteryOBJs[i]->getObjectCoord().x << ", " << gBatteryOBJs[i]->getObjectCoord().y << ", " << gBatteryOBJs[i]->getObjectCoord().z << std::endl;
+        if(gBatteryOBJs[i]->getObjectCoord() != glm::vec3(0, 0, 0)) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
+        else gBatteryOBJs[i]->PreDraw(glm::vec3(1.0+i, -gBatteryOBJs[i]->getMinCoord().y, 1.0+i));
         gBatteryOBJs[i]->Draw();
     }
 
@@ -427,9 +430,11 @@ void Input(){
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
         if(InOBJ(curPos, gBatteryOBJs[i])){
             g.gCamera.CollectBattery();
-            delete gBatteryOBJs[i];
+            std::cout << "Collect Battery i: " << i << std::endl;
+            //delete gBatteryOBJs[i];
             gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
-            --i;
+            //--i;
+            break;
         }
     }
     
@@ -457,7 +462,7 @@ void MainLoop(){
         // Type of start of frame
 		Uint32 start = SDL_GetTicks();
 		// Handle Input
-		Input();
+		//Input();
 		// Setup anything (i.e. OpenGL State) that needs to take
 		// place before draw calls
 
@@ -473,7 +478,7 @@ void MainLoop(){
         //      The pipeline that is utilized is whatever 'glUseProgram' is
         //      currently binded.
 		Draw();
-
+        Input();
         // Calculate how much time has elapsed
 		// since the start of the frame, and delay
 		// for the difference in milliseconds to attempt
