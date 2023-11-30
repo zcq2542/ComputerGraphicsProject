@@ -220,6 +220,11 @@ float Camera::GetLightStrength(){
     return LightStrength;
 }
 
+void Camera::CollectBattery(){
+    BatteryTime += 30;
+    ShutDownTime += 30;
+}
+
 Camera::Camera(){
     std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
 	// Position us at the origin.
@@ -234,9 +239,9 @@ Camera::Camera(){
     light_scope = 0.1 * M_PI;
     //m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
     HeadLightOn = 1;
-    ShutDownTime = SDL_GetTicks() + 70 * 1000; // batery time is 70s.
-    RecoverTime = 0;
     BatteryTime = 70;
+    ShutDownTime = SDL_GetTicks() + BatteryTime * 1000; // batery time is 70s.
+    RecoverTime = 0;
     LightStrength = 1.5f;
 
 }

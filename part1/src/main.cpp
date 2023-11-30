@@ -199,7 +199,7 @@ void Draw(){
     //std::cout << "(OBJ) Draw" << std::endl;
 
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
-        gBatteryOBJs[i]->PreDraw(glm::vec3(0, -gBatteryOBJs[i]->getMinCoord().y, 0));
+        gBatteryOBJs[i]->PreDraw(glm::vec3(1.0, -gBatteryOBJs[i]->getMinCoord().y, 1.0));
         gBatteryOBJs[i]->Draw();
     }
 
@@ -299,6 +299,21 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
 void WinGame() {
 	// TODO:
 	std::cout << "You Win!" << std::endl;
+}
+
+bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object){
+    glm::mat4 translationMatrix1 = glm::translate(glm::mat4(1.0f), -object->getObjectCoord());
+    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -glm::radians(object->getRot()), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
+    glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
+    if (rotatedCameraEyePosition.x <= object->getMaxCoord().x + 0.1f
+    && rotatedCameraEyePosition.z <= object->getMaxCoord().z + 0.1f
+    && rotatedCameraEyePosition.x >= object->getMinCoord().x - 0.1f
+    && rotatedCameraEyePosition.z >= object->getMinCoord().z - 0.1f) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -406,6 +421,18 @@ void Input(){
             g.gPolygonMode = GL_FILL;
         }
     }
+    
+    // check whether get the battery
+    glm::vec3 curPos = g.gCamera.GetEyePosition();
+    for(int i = 0; i < gBatteryOBJs.size(); ++i){
+        if(InOBJ(curPos, gBatteryOBJs[i])){
+            g.gCamera.CollectBattery();
+            delete gBatteryOBJs[i];
+            gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
+            --i;
+        }
+    }
+    
 }
 
 

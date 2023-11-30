@@ -66,6 +66,8 @@ public:
     void SwitchLight();
     int GetIfLightOn();
     float GetLightStrength();
+    void CollectBattery();
+
 private:
 
     // Track the old mouse position
