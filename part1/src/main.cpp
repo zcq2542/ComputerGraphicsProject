@@ -250,6 +250,7 @@ bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object, float margin=0.1f){
 }
 
 /**
+<<<<<<< HEAD
  * Function to check collision with tress
  * 
  * @return bool whether camera collide in tree
@@ -262,6 +263,8 @@ bool CollideTree(glm::vec3 cameraEyePosition, glm::vec2 treeCoord, float margin=
 }
 
 /**
+=======
+>>>>>>> ca8726d (Object placement feature for win condition (#7))
  * Function to check if found Chalice (reached goal), it has a larger margin than InOBJ check
  * 
  * @return bool whether we have reached goal
