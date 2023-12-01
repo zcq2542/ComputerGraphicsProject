@@ -165,28 +165,60 @@ void getOpenGLVersionInfo(){
 }
 
 /**
+ * Function to check if camera is in obj, 
+ * used to detect collision, collect battery and reach final goals (Chalic)
+ * 
+ * @return bool whether camera in obj
+*/
+bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object, float margin=0.1f){
+	// 1. Translate the cameraEyePosition so that the center of rotation is at the origin.
+	// 2. Rotate the translated cameraEyePosition using a rotation matrix.
+	// 3. Compare with the object's original max and min coord
+    glm::mat4 translationMatrix1 = glm::translate(glm::mat4(1.0f), -object->getObjectCoord());
+    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -glm::radians(object->getRot()), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
+    glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
+    return rotatedCameraEyePosition.x <= object->getMaxCoord().x + margin
+		&& rotatedCameraEyePosition.z <= object->getMaxCoord().z + margin
+		&& rotatedCameraEyePosition.x >= object->getMinCoord().x - margin
+		&& rotatedCameraEyePosition.z >= object->getMinCoord().z - margin;
+}
+
+/**
+ * Function to check if found Chalice (reached goal), it has a larger margin than InOBJ check
+ * 
+ * @return bool whether we have reached goal
+*/
+bool FoundChalice(glm::vec3 cameraEyePosition, OBJ* chalice) {
+	return InOBJ(cameraEyePosition, chalice, 0.2f);
+}
+
+/**
  * Function to check collision between objects and camera
  * 
  * @return bool whether we have a collision
 */
 bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
+	// collision with object
 	for (auto& object : gObjVector) {
-		// 1. Translate the cameraEyePosition so that the center of rotation is at the origin.
-		// 2. Rotate the translated cameraEyePosition using a rotation matrix.
-		// 3. Compare with the object's original max and min coord
-		glm::mat4 translationMatrix1 = glm::translate(glm::mat4(1.0f), -object->getObjectCoord());
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -glm::radians(object->getRot()), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
-		glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
-		if (rotatedCameraEyePosition.x <= object->getMaxCoord().x + 0.1f 
-		&& rotatedCameraEyePosition.z <= object->getMaxCoord().z + 0.1f
-		&& rotatedCameraEyePosition.x >= object->getMinCoord().x - 0.1f
-		&& rotatedCameraEyePosition.z >= object->getMinCoord().z - 0.1f) {
+		if (InOBJ(cameraEyePosition, object)) {
 			return true;
 		}
 	}
-	return false;
+	// collision with boundary
+	return !(cameraEyePosition.x >= g.gMinValue 
+			&& cameraEyePosition.x <= g.gMaxValue 
+			&& cameraEyePosition.z >= g.gMinValue 
+			&& cameraEyePosition.z <= g.gMaxValue);
+}
+
+/**
+ * Function to handle event right after winning the game
+*/
+void WinGame() {
+	// TODO:
+	std::cout << "Winner!" << std::endl;
 }
 
 /**
@@ -237,6 +269,9 @@ void Input(){
 			g.gCamera.MoveBackward(cameraSpeed);
 		} else {
 			g.gCamera.MoveForward(cameraSpeed);
+			if (FoundChalice(g.gCamera.GetEyePosition(), gObjVector[3])) {
+				g.gWin = true;
+			}
 		}
     }
     if (state[SDL_SCANCODE_S]) {
@@ -244,6 +279,9 @@ void Input(){
 			g.gCamera.MoveForward(cameraSpeed);
 		} else {
 			g.gCamera.MoveBackward(cameraSpeed);
+			if (FoundChalice(g.gCamera.GetEyePosition(), gObjVector[3])) {
+				g.gWin = true;
+			}
 		}
     }
     if (state[SDL_SCANCODE_A]) {
@@ -251,6 +289,9 @@ void Input(){
 			// g.gCamera.MoveRight(cameraSpeed);
 		} else {
 			g.gCamera.MoveLeft(cameraSpeed);
+			if (FoundChalice(g.gCamera.GetEyePosition(), gObjVector[3])) {
+				g.gWin = true;
+			}
 		}
     }
     if (state[SDL_SCANCODE_D]) {
@@ -258,8 +299,11 @@ void Input(){
 			// g.gCamera.MoveLeft(cameraSpeed);
 		} else {
 			g.gCamera.MoveRight(cameraSpeed);
+			if (FoundChalice(g.gCamera.GetEyePosition(), gObjVector[3])) {
+				g.gWin = true;
+			}
 		}
-    }
+    } 
 
 	// Press R to reset position
 	if (state[SDL_SCANCODE_R]) {
@@ -309,6 +353,12 @@ void MainLoop(){
 		Input();
 		// Setup anything (i.e. OpenGL State) that needs to take
 		// place before draw calls
+
+		if (g.gWin) {
+			WinGame();
+			// g.gQuit = true;
+		}
+
 		PreDraw();
 		// Draw Calls in OpenGL
         // When we 'draw' in OpenGL, this activates the graphics pipeline.

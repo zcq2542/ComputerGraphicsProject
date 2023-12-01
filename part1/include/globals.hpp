@@ -22,8 +22,15 @@ struct Global{
 	SDL_Window* gGraphicsApplicationWindow 	= nullptr;
 	SDL_GLContext gOpenGLContext			= nullptr;
 
+	// xz plane dimension boundary of map
+	float gMaxValue 						= 25.f;
+	float gMinValue							= -25.f;
+
 	// Main loop flag
 	bool gQuit = false; // If this is quit = 'true' then the program terminates.
+
+	// Win game flag
+	bool gWin = false; 
 
 	// Camera
 	Camera gCamera;
