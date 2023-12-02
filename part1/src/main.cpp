@@ -166,6 +166,7 @@ void PreDraw(){
 */
 void Draw(){
     // Draw objects
+    //g.gCamera.GetBatteryInfo();
     g.gCamera.CheckBattery();
 
     //std::cout << "(OBJ) start Draw" << std::endl;
