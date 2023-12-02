@@ -158,10 +158,13 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
 std::vector<glm::vec2> RandomObjectsPlacement() {
     std::vector<glm::vec2> selectableCoordsArray; // x, z coordinate
 
-    // Map defined as 50.f by 50.f, possible placement for objects, min 5.f apart from each other and from the boundary
-    for (float x = -20.f; x <= 20.f; x += 5.0f) {
-        for (float y = -20.f; y <= 20.f; y += 5.0f) {
-            selectableCoordsArray.push_back(glm::vec2(x, y));
+    // Map defined as 40.f by 40.f, possible placement for objects, min 5.f apart from each other and from the boundary
+    for (float x = -15.f; x <= 15.f; x += 5.0f) {
+        for (float y = -15.f; y <= 15.f; y += 5.0f) {
+            // exclude origin
+            if (x != 0.f && y != 0.f) {
+                selectableCoordsArray.push_back(glm::vec2(x, y));
+            }
         }
     }
 

@@ -95,6 +95,9 @@ private:
     glm::vec3 mMax = glm::vec3(-FLT_MAX, -FLT_MAX, -FLT_MAX);   // Maximum (x, y, z) coordinates
     glm::vec3 mObjectCoord;  // origin of object being placed
     float mRot;              // angle rotated along y-axis when being placed 
+
+    bool mDrawGrass = false;            // check if we are drawing grass
+    glm::vec3 mTranslations[400];
 };
 
 #endif

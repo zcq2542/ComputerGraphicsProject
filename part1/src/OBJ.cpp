@@ -24,6 +24,9 @@ OBJ::OBJ(std::string fileName) {
     std::ifstream inFile;
     inFile.open(fileName);
 
+    // check if we are drawing grass
+    mDrawGrass = (fileName == g.gGrassFileName);
+
     // check filepath is correct
     if (!inFile.is_open()) {
         std::cerr << "Could not open file: " << fileName << std::endl;
@@ -450,6 +453,22 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         exit(EXIT_FAILURE);
         }
     }
+
+    // Grass offset uniform
+    if (mDrawGrass) {
+        // shader.use();
+        for(unsigned int i = 0; i < 400; i++) {
+            // shader.setVec2(("offsets[" + std::to_string(i) + "]")), translations[i]);
+            uniformName = "offsets[" + std::to_string(i) + "]";
+            GLint u_offsetsLocation = glGetUniformLocation(mShaderID, uniformName.c_str());
+            if(u_offsetsLocation>=0){
+                // Setup the slot for the texture
+                glUniform3fv(u_offsetsLocation, 1, &mTranslations[i][0]);
+            }else{
+                std::cout << "Could not find " << uniformName << std::endl;
+            }
+        } 
+    } 
 }
 
 /**
@@ -460,7 +479,11 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
 void OBJ::Draw(){
     // Render data
 	glBindVertexArray(mVAO);
-    glDrawArrays(GL_TRIANGLES, 0, mVerticesArray.size()/3);
+    if (mDrawGrass) {
+        glDrawArraysInstanced(GL_TRIANGLES, 0, mVerticesArray.size()/3, 400);  
+    } else {
+        glDrawArrays(GL_TRIANGLES, 0, mVerticesArray.size()/3);
+    }
 }
 
 /**
@@ -469,7 +492,7 @@ void OBJ::Draw(){
 * @return void
 */
 void OBJ::CreateGraphicsPipeline() {
-    std::string vertexShaderSource      = LoadShaderAsString("./shaders/vert.glsl");
+    std::string vertexShaderSource      = mDrawGrass ? LoadShaderAsString("./shaders/grass_vert.glsl") : LoadShaderAsString("./shaders/vert.glsl");
     std::string fragmentShaderSource    = LoadShaderAsString("./shaders/frag.glsl");
 
     mShaderID = CreateShaderProgram(vertexShaderSource,fragmentShaderSource);
@@ -524,6 +547,23 @@ void OBJ::VertexSpecification() {
         glBufferData(GL_ARRAY_BUFFER, mBitangentArray.size() * sizeof(float), mBitangentArray.data(), GL_STATIC_DRAW);
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    }
+
+    // grass
+    if (mDrawGrass) {
+        int index = 0;
+        float offset = 0.f;
+        for(int z = -19; z <= 19; z += 2) {
+            for(int x = -19; x <= 19; x += 2) {
+                glm::vec3 translation;
+                translation.x = (float)x + offset;
+                translation.y = 0.0f;
+                translation.z = (float)z + offset;
+                mTranslations[index++] = translation;
+            }
+        }  
+        std::cout << index << std::endl;
+        std::cout << sizeof(mTranslations) / sizeof(mTranslations[0]) << std::endl;
     }
 
     // Unbind our currently bound Vertex Array Object

@@ -51,6 +51,8 @@ struct Global{
 	std::string gWindmillFileName = "./../common/objects/windmill/windmill.obj";
 	// Chalice Object
 	std::string gChaliceFileName = "./../common/objects/Chalice/Stone_Chalic_OBJ.obj";
+	// Grass Object
+	std::string gGrassFileName = "./../common/objects/grass/grass.obj";
 	// Tree Objects
 	std::string gTreeFileName1 = "./../common/objects";
 	std::string gTreeFileName2 = "./../common/objects";
