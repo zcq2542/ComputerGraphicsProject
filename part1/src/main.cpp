@@ -308,20 +308,6 @@ void WinGame() {
 	std::cout << "You Win!" << std::endl;
 }
 
-bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object){
-    glm::mat4 translationMatrix1 = glm::translate(glm::mat4(1.0f), -object->getObjectCoord());
-    glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), -glm::radians(object->getRot()), glm::vec3(0.0f, 1.0f, 0.0f));
-
-    glm::mat4 updatePointMatrix = rotationMatrix * translationMatrix1;
-    glm::vec3 rotatedCameraEyePosition = glm::vec3(updatePointMatrix * glm::vec4(cameraEyePosition, 1.0f));
-    if (rotatedCameraEyePosition.x <= object->getMaxCoord().x + 0.1f
-    && rotatedCameraEyePosition.z <= object->getMaxCoord().z + 0.1f
-    && rotatedCameraEyePosition.x >= object->getMinCoord().x - 0.1f
-    && rotatedCameraEyePosition.z >= object->getMinCoord().z - 0.1f) {
-        return true;
-    }
-    return false;
-}
 
 /**
 * Function called in the Main application loop to handle user input
