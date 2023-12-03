@@ -17,7 +17,7 @@ Light::Light(){
     mLightColor.y = 1.0f;
     mLightColor.z = 1.0f;
     mSpecularStrength = 0.0f;
-    mAmbientIntensity = 0.1f;
+    mAmbientIntensity = 0.001f;
 }
 
 Light::Light(glm::vec3 position, glm::vec3 lightColor, glm::vec3 lightDir, float SpecularStrength, float AmbientIntensity){

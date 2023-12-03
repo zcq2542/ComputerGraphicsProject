@@ -27,6 +27,7 @@
 #include "globals.hpp"
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
+OBJ* grass;
 
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
@@ -92,6 +93,9 @@ void InitializeProgram(){
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
+
+	grass = new OBJ(g.gGrassFileName);
+	grass->Initialize();
 }
 
 /**
@@ -146,6 +150,10 @@ void Draw(){
 	// Chalice
 	gObjVector[3]->PreDraw(glm::vec3(gSelectedVecs[3].x, -gObjVector[3]->getMinCoord().y, gSelectedVecs[3].y));
     gObjVector[3]->Draw();
+
+	// Grass
+	grass->PreDraw(glm::vec3(0.0f, 0.0f, 0.0f));
+	grass->Draw();
 
     // Draw light
     g.gLight.PreDraw();
@@ -400,6 +408,8 @@ void CleanUp(){
         delete object;
     }
     gObjVector.clear();
+	
+	delete grass;
 
 	//Quit SDL subsystems
 	SDL_Quit();
