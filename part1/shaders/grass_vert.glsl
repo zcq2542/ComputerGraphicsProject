@@ -69,25 +69,14 @@ void main()
   // calculate TBN
   mat3 TBN = calculateTBN();
   mat3 transTBN = transpose(TBN);
-  /*
+  
   TangentLightPos = transTBN * (u_Light[0].lightPos);
   TangentViewPos = transTBN * u_ViewDirection;
   TangentFragPos = transTBN * v_worldSpaceFragment;
   TangentHeadLightPos = transTBN * u_EyePosition;
-  */
-  TangentLightPos = (u_Light[0].lightPos);
-  TangentViewPos = u_ViewDirection;
-  TangentFragPos = v_worldSpaceFragment;
-  TangentHeadLightPos = u_EyePosition;
-  
+
   // Compute the MVP matrix
-  // vec3 offset = offsets[gl_InstanceID];
-  //gl_Position = u_Projection * u_ViewMatrix * u_ModelMatrix * vec4(position + offset, 1.0f);
   gl_Position = u_Projection * u_ViewMatrix * u_ModelMatrix * vec4(offsetPosition, 1.0f);
-  
-  //vec2 offset = offsets[gl_InstanceID];
-  //gl_Position = vec4(gl_Position.x+offset.x, gl_Position.y, gl_Position.z+offset.z, 1.0f);
-  //gl_Position = gl_Position + vec4(offset, 1.0f);
 }
 
 
