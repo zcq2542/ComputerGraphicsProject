@@ -149,6 +149,40 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
     return programObject;
 }
 
+GLuint Create3ShaderProgram(const std::string& vertexShaderSource, const std::string& geometryShaderSource, const std::string& fragmentShaderSource){
+
+    // Create a new program object
+    GLuint programObject = glCreateProgram();
+
+    // Compile our shaders
+    GLuint myVertexShader   = CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
+    GLuint myFragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    GLuint myGeometryShader = CompileShader(GL_GEOMETRY_SHADER, geometryShaderSource);
+
+    // Link our two shader programs together.
+	// Consider this the equivalent of taking two .cpp files, and linking them into
+	// one executable file.
+    glAttachShader(programObject,myVertexShader);
+    glAttachShader(programObject,myGeometryShader);
+    glAttachShader(programObject,myFragmentShader);
+    glLinkProgram(programObject);
+
+    // Validate our program
+    glValidateProgram(programObject);
+
+    // Once our final program Object has been created, we can
+	// detach and then delete our individual shaders.
+    glDetachShader(programObject,myVertexShader);
+    glDetachShader(programObject,myGeometryShader);
+    glDetachShader(programObject,myFragmentShader);
+	// Delete the individual shaders once we are done
+    glDeleteShader(myVertexShader);
+    glDeleteShader(myGeometryShader);
+    glDeleteShader(myFragmentShader);
+
+    return programObject;
+}
+
 /**
  * Creates a array of possible (x,z) coordinates to place objects and return an array 
  * with 4 random coordinates that can be used to place 4 objects

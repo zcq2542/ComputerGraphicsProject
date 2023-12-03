@@ -48,6 +48,9 @@ GLuint CompileShader(GLuint type, const std::string& source);
 */
 GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 
+GLuint Create3ShaderProgram(const std::string& vertexShaderSource, const std::string& geometryShaderSource, const std::string& fragmentShaderSource);
+
+
 /**
  * Creates a array of possible (x,z) coordinates to place objects and return an array 
  * with 4 random coordinates that can be used to place 4 objects
