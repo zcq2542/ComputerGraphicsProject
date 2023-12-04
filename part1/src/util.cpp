@@ -77,6 +77,9 @@ GLuint CompileShader(GLuint type, const std::string& source){
 	}else if(type == GL_FRAGMENT_SHADER){
 		shaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 	}
+    else if(type == GL_GEOMETRY_SHADER){
+        shaderObject = glCreateShader(GL_GEOMETRY_SHADER);
+    }
 
 	const char* src = source.c_str();
 	// The source of our shader
@@ -99,7 +102,9 @@ GLuint CompileShader(GLuint type, const std::string& source){
 			std::cout << "ERROR: GL_VERTEX_SHADER compilation failed!\n" << errorMessages << "\n";
 		}else if(type == GL_FRAGMENT_SHADER){
 			std::cout << "ERROR: GL_FRAGMENT_SHADER compilation failed!\n" << errorMessages << "\n";
-		}
+		}else{
+            std::cout << "ERROR:  other SHADER compilation failed!\n" << errorMessages << "\n";
+        }
 		// Reclaim our memory
 		delete[] errorMessages;
 
@@ -137,6 +142,18 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
 
     // Validate our program
     glValidateProgram(programObject);
+
+    GLint success;
+    glGetProgramiv(programObject, GL_LINK_STATUS, &success);
+    if (!success) {
+        GLchar infoLog[512];
+        glGetProgramInfoLog(programObject, 512, NULL, infoLog);
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
+    else {
+        std::cout << "success" << std::endl;
+    }
+
 
     // Once our final program Object has been created, we can
 	// detach and then delete our individual shaders.

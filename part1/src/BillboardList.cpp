@@ -61,6 +61,7 @@ void BillboardList::VertexSpecification(){
     glBufferData(GL_ARRAY_BUFFER, treePos.size() * sizeof(float), treePos.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    //glEnableVertexAttribArray(0);
     glVertexAttribDivisor(0, 1);
     
     // Unbind our currently bound Vertex Array Object
@@ -72,6 +73,7 @@ void BillboardList::VertexSpecification(){
 
 void BillboardList::PreDraw(){
     // Use our shader
+    glBindVertexArray(mVAO);
     glUseProgram(mShaderID);
     std::cout << "using mShaderID: " << mShaderID << std::endl;
     
@@ -157,19 +159,22 @@ void BillboardList::PreDraw(){
         std::cout << "Could not find u_headLightCol" << std::endl;
     }
     
+    
+    
     //
     mTexture->Bind(0);
     std::string uniformName = "textureSampler";
-        GLint u_diffuseTextureLocation = glGetUniformLocation(mShaderID, uniformName.c_str());
-        if(u_diffuseTextureLocation>=0){
-            // Setup the slot for the texture
-            glUniform1i(u_diffuseTextureLocation,0);
-        }else{
-            std::cout << "Could not find" << uniformName << std::endl;
-        exit(EXIT_FAILURE);
-        }
-
+    GLint u_diffuseTextureLocation = glGetUniformLocation(mShaderID, uniformName.c_str());
+    if(u_diffuseTextureLocation>=0){
+        // Setup the slot for the texture
+        glUniform1i(u_diffuseTextureLocation,0);
+    }else{
+        std::cout << "Could not find " << uniformName << std::endl;
+        //exit(EXIT_FAILURE);
+    }
+    
 }
+
 
 
 /**
@@ -180,6 +185,7 @@ void BillboardList::PreDraw(){
 void BillboardList::Draw(){
     // Render data
     glBindVertexArray(mVAO);
-    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, treePos.size()/3); // very Instance 4 point
+    glDrawArraysInstanced(GL_POINTS, 0, 1, treePos.size()/3); // very Instance 4 point
+    //glDrawArrays(GL_POINTS, 0, treePos.size());
 }
 

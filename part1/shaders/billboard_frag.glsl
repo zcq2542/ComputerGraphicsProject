@@ -19,6 +19,7 @@ float calculateAngle(vec3 A, vec3 B) {
 }
 
 vec4 HeadLight(){
+    vec4 headLight = vec4(0,0,0,1);
     if(u_HeadLightOn != 0){
         vec3 headLightDirection;
         vec3 ambient;
@@ -27,27 +28,34 @@ vec4 HeadLight(){
         float headLightAmbientIntensity = 0.0f;
         float specularStrength = 0.8f;
 
-        float constant = 1.0;    // Constant attenuation
-        float linear = 0.01;     //0.09 Linear attenuation
-        float quadratic = 0.032;  //0.032; // Quadratic attenuation
+        float constant = 1.0f;    // Constant attenuation
+        float linear = 0.01f;     //0.09 Linear attenuation
+        float quadratic = 0.032f;  //0.032; // Quadratic attenuation
 
         headLightDirection = normalize(u_EyePosition - fragPos);
         vec3 colorDiffuse = texture(textureSampler, texCoord).rgb;
 
         // Ambient lighting
         ambient = headLightAmbientIntensity * u_HeadLightCol * colorDiffuse;
+        
         float angle = calculateAngle(-headLightDirection, u_ViewDirection);
-        if(angle < u_HeadLightScope){
+        //angle = 0;
+        //if(angle < u_HeadLightScope){
+        //if(angle < 0.4){
             float headLightStren = -1/(u_HeadLightScope * u_HeadLightScope) * (angle*angle) + 1;
+            headLightStren = 1.0f;
             headLightStren *= u_HeadLightStrength;
             // Calculate distance from light source to fragment
             float distance = length(u_EyePosition - fragPos);
 
             // Calculate attenuation (decay) based on distance
-            float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+            float attenuation = 1.0f / (constant + linear * distance + quadratic * (distance * distance));
+            attenuation = 0.5;
             // diffuse light
             float diff = 1.0;
-            diffuse = attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse;
+            //float diff =  max(0.0, dot(headLightDirection, fragNormal));
+            diffuse = attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse ;
+            //diffuse = colorDiffuse;
 
             // specular light
             vec3 reflectionDirection = reflect(headLightDirection, fragNormal);
@@ -55,17 +63,28 @@ vec4 HeadLight(){
             specular = attenuation * headLightStren *  specularStrength * u_HeadLightCol * (spec) * colorDiffuse;
 
             // Send fragment to output with specular
-            vec4 headLight = vec4(ambient + diffuse + specular, 1.0f);
-            return headLight;
-        }
+            //headLight = vec4(ambient + diffuse + specular, 1.0f);
+            headLight = vec4(diffuse, 1.0f);
+       // }
     }
+    return headLight;
 }
 
 void main()
 {
+    //fragColor = vec4(1,1,1,1);
+    //fragColor = vec4(fragPos,1);
     fragColor = HeadLight();
-    if (fragColor.r == 0 && fragColor.g == 0 && fragColor.b == 0) {
+    //fragColor = vec4(u_HeadLightCol * texture(textureSampler, texCoord).rgb, 1);
+    //fragColor = vec4(texture(textureSampler, texCoord).rgb, 1);
+   /* 
+    if (fragColor.r <= 0.1 && fragColor.g <= 0.1 && fragColor.b <= 0.1) {
+        discard;
+    }*/
+    /*
+    if (fragColor.r <= 0.05 && fragColor.g <= 0.05 && fragColor.b <= 0.05) {
         discard;
     }
+    */
 }
 

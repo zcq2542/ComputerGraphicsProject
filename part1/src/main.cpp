@@ -83,7 +83,7 @@ void InitializeProgram(){
     g.gLight.Initialize();
 
     trees = new BillboardList(g.gTreeFileName);
-    std::vector<float> treesPos{1,0,1,2,0,2,3,0,3};
+    std::vector<float> treesPos{1,0,1,-4,0,4,-6,0,-6,3,0,-3};
     trees->SetPos(treesPos);
     trees->Initialize();
 	// Initialize objects

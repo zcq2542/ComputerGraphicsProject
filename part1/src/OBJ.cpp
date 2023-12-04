@@ -496,6 +496,8 @@ void OBJ::CreateGraphicsPipeline() {
     std::string fragmentShaderSource    = LoadShaderAsString("./shaders/frag.glsl");
 
     mShaderID = CreateShaderProgram(vertexShaderSource,fragmentShaderSource);
+    std::cout << "Create mShaderID: " << mShaderID << std::endl;
+
 }
 
 /**
