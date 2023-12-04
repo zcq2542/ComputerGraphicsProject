@@ -28,6 +28,7 @@
 
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
+<<<<<<< HEAD
 std::vector<glm::vec2> gTreesCoords;
 OBJ* grass;
 std::vector<OBJ*> gBatteryOBJs;
@@ -96,15 +97,18 @@ void InitializeProgram(){
     }
     std::cout << "Battery(light) Initialize" << std::endl;
 
-    for(int i = 0; i < 4; ++i){
+    for(int i = 0; i < 10; ++i){
         gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
     }
     //OBJ obj1 = OBJ(g.gBatteryFileName);
     std::cout << "Battery(OBJ) emplace" << std::endl;
 	for (auto& object : gBatteryOBJs) {
 		object->Initialize();
+        object->randomXZCoord(-5, 5);
 	}
     std::cout << gBatteryOBJs.size() << " Battery(OBJ) Initialize" << std::endl;
+	//gSelectedVecs2 = RandomObjectsPlacement(gBatteryOBJs.size());
+    std::cout << "gSelect for battery" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -202,8 +206,9 @@ void Draw(){
     //std::cout << "gBatteryOBJs.size(): " << gBatteryOBJs.size() << std::endl;
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
         //std::cout << "coor" << gBatteryOBJs[i]->getObjectCoord().x << ", " << gBatteryOBJs[i]->getObjectCoord().y << ", " << gBatteryOBJs[i]->getObjectCoord().z << std::endl;
-        if(gBatteryOBJs[i]->getObjectCoord() != glm::vec3(0, 0, 0)) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
-        else gBatteryOBJs[i]->PreDraw(glm::vec3(1.0+i, -gBatteryOBJs[i]->getMinCoord().y, 1.0+i));
+        //if(gBatteryOBJs[i]->getObjectCoord() != glm::vec3(0, 0, 0)) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
+        if(gBatteryOBJs[i]->getObjectCoord().y != 0) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
+        else gBatteryOBJs[i]->PreDraw(glm::vec3(gBatteryOBJs[i]->getObjectCoord().x, -gBatteryOBJs[i]->getMinCoord().y, gBatteryOBJs[i]->getObjectCoord().z));
         gBatteryOBJs[i]->Draw();
     }
 
@@ -250,7 +255,6 @@ bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object, float margin=0.1f){
 }
 
 /**
-<<<<<<< HEAD
  * Function to check collision with tress
  * 
  * @return bool whether camera collide in tree
@@ -263,8 +267,6 @@ bool CollideTree(glm::vec3 cameraEyePosition, glm::vec2 treeCoord, float margin=
 }
 
 /**
-=======
->>>>>>> ca8726d (Object placement feature for win condition (#7))
  * Function to check if found Chalice (reached goal), it has a larger margin than InOBJ check
  * 
  * @return bool whether we have reached goal

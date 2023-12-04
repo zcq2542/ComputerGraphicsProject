@@ -694,3 +694,11 @@ void OBJ::clear() {
     mTangentArray.clear();
     mBitangentArray.clear();
 }
+
+
+void OBJ::randomXZCoord(int min, int max){
+    mObjectCoord.x = float(min + rand() % (max - min + 1));
+    mObjectCoord.z = float(min + rand() % (max - min + 1));
+    mObjectCoord.y = -mMin.y;
+ }
+

@@ -48,8 +48,12 @@ public:
     inline glm::vec3 getMaxCoord() const { return mMax; }
     // Get object coordinate
     inline glm::vec3 getObjectCoord() const { return mObjectCoord; }
+    // Set object coordinate
+    inline void setObjectCoord(glm::vec3 coord) { mObjectCoord = coord; }
     // Get object rotation
     inline float getRot() const { return mRot; }
+    // gen rand x, z for battery
+    void randomXZCoord(int min, int max);
 
 private:    
     std::vector<GLfloat> mVertexIndex;
