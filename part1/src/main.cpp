@@ -85,13 +85,13 @@ void InitializeProgram(){
 
     // Initialize Light
     //g.gLight.Initialize();
-   
+    /*
     glm::vec3 BatteryCol = glm::vec3(0.3, 1.0, 0.1);
 
     g.gBatteries.push_back(Light(glm::vec3(1, -1, -1), BatteryCol));
     g.gBatteries.push_back(Light(glm::vec3(-1, -1, -1), BatteryCol));
     g.gBatteries.push_back(Light(glm::vec3(3, -1, 3), BatteryCol));
-
+    */
     for(auto& Battery : g.gBatteries){
         Battery.Initialize();
     }
@@ -104,7 +104,7 @@ void InitializeProgram(){
     std::cout << "Battery(OBJ) emplace" << std::endl;
 	for (auto& object : gBatteryOBJs) {
 		object->Initialize();
-        object->randomXZCoord(-5, 5);
+        object->randomXZCoord(-20, 20);
 	}
     std::cout << gBatteryOBJs.size() << " Battery(OBJ) Initialize" << std::endl;
 	//gSelectedVecs2 = RandomObjectsPlacement(gBatteryOBJs.size());
@@ -215,10 +215,12 @@ void Draw(){
     // Draw light
     //g.gLight.PreDraw();
     //g.gLight.Draw();
+    /*
     for(int i = 0; i < g.gBatteries.size(); ++i){
         g.gBatteries[i].PreDraw();
         g.gBatteries[i].Draw();
     }
+    */
 }
 
 /**
