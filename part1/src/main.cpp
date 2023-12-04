@@ -21,14 +21,16 @@
 #include "OBJ.hpp"
 #include "Light.hpp"
 #include "util.hpp"
-
+#include "BillboardList.hpp"
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
+std::vector<glm::vec2> gTreesCoords;
 OBJ* grass;
 
+BillboardList* trees;
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
 * and the OpenGL Context (with the appropriate version)
@@ -78,8 +80,8 @@ void InitializeProgram(){
 		exit(1);
 	}
 
-    // Initialize Light
-    g.gLight.Initialize();
+    // // Initialize Light
+    // g.gLight.Initialize();
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -93,6 +95,12 @@ void InitializeProgram(){
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
+
+	// Initialize Trees
+    trees = new BillboardList(g.gTreeFileName);
+    gTreesCoords = RandomTreesPlacement(gSelectedVecs, 500);
+    trees->SetPos(gTreesCoords);
+    trees->Initialize();
 
 	grass = new OBJ(g.gGrassFileName);
 	grass->Initialize();
@@ -155,9 +163,13 @@ void Draw(){
 	grass->PreDraw(glm::vec3(0.0f, 0.0f, 0.0f));
 	grass->Draw();
 
-    // Draw light
-    g.gLight.PreDraw();
-    g.gLight.Draw();
+    // // Draw light
+    // g.gLight.PreDraw();
+    // g.gLight.Draw();
+
+    // Draw trees
+    trees->PreDraw();
+    trees->Draw();
 }
 
 /**
@@ -194,6 +206,18 @@ bool InOBJ(glm::vec3 cameraEyePosition, OBJ* object, float margin=0.1f){
 }
 
 /**
+ * Function to check collision with tress
+ * 
+ * @return bool whether camera collide in tree
+*/
+bool CollideTree(glm::vec3 cameraEyePosition, glm::vec2 treeCoord, float margin=0.2f){
+    return cameraEyePosition.x <= treeCoord.x + margin
+		&& cameraEyePosition.z <= treeCoord.y + margin
+		&& cameraEyePosition.x >= treeCoord.x - margin
+		&& cameraEyePosition.z >= treeCoord.y - margin;
+}
+
+/**
  * Function to check if found Chalice (reached goal), it has a larger margin than InOBJ check
  * 
  * @return bool whether we have reached goal
@@ -214,6 +238,14 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
 			return true;
 		}
 	}
+
+	// collision with tree
+	for (auto& tree : gTreesCoords) {
+		if (CollideTree(cameraEyePosition, tree)) {
+			return true;
+		}
+	}
+
 	// collision with boundary
 	return !(cameraEyePosition.x >= g.gMinValue 
 			&& cameraEyePosition.x <= g.gMaxValue 
@@ -226,7 +258,7 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
 */
 void WinGame() {
 	// TODO:
-	std::cout << "Winner!" << std::endl;
+	std::cout << "You Win!" << std::endl;
 }
 
 /**
@@ -411,6 +443,7 @@ void CleanUp(){
 	
 	delete grass;
 
+    if(trees) delete trees;
 	//Quit SDL subsystems
 	SDL_Quit();
 }

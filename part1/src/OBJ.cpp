@@ -184,7 +184,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
 	glUseProgram(mShaderID);
 
     // Model transformation by translating our object into world space
-    // glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,1.0f)); 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), objectCoord);
     model = glm::rotate(model,glm::radians(rot),glm::vec3(0.0f,1.0f,0.0f)); 
 
@@ -232,7 +231,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform3fv(lightPosLocation, 1, &g.gLight.mPosition[0]);
     } else {
         //std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup light color
@@ -242,7 +240,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform3fv(lightColorLocation, 1, &g.gLight.mLightColor[0]);
     } else {
         //std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup specular strength    
@@ -252,7 +249,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform1f(specularStrengthLocation, g.gLight.mSpecularStrength);
     } else {
         //std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
     
     // Setup ambient intensity
@@ -262,7 +258,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform1f(ambientIntensityLocation, g.gLight.mAmbientIntensity);
     } else {
         //std::cout << "Could not find " << uniformName << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup view direction
@@ -297,7 +292,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform1i(headLightOnLocation, g.gCamera.GetIfLightOn());
     }else{
         std::cout << "Could not find u_headLightOn" << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
     // Setup head light Strength
@@ -307,7 +301,6 @@ void OBJ::PreDraw(glm::vec3 objectCoord, float rot){
         glUniform1f(headLightStrengthLocation, g.gCamera.GetLightStrength());
     }else{
         std::cout << "Could not find u_headLightStrength" << std::endl;
-        //exit(EXIT_FAILURE);
     }
 
 
@@ -562,8 +555,6 @@ void OBJ::VertexSpecification() {
                 mTranslations[index++] = translation;
             }
         }  
-        std::cout << index << std::endl;
-        std::cout << sizeof(mTranslations) / sizeof(mTranslations[0]) << std::endl;
     }
 
     // Unbind our currently bound Vertex Array Object

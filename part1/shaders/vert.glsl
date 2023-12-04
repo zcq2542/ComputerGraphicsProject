@@ -51,7 +51,6 @@ void main()
   //v_vertexColors = vertexColors;
 
   // Update the normals based on modelMatrix as we are rotating the model
-  //v_vertexNormals= normalize(mat3(transpose(inverse(u_ModelMatrix))) * vertexNormals);
   v_vertexNormals = vertexNormals;
 
   // Pass texture coordinates to the fragment shader

@@ -43,6 +43,8 @@ struct Global{
 
     std::vector<Light> glights;
 
+	// Tree texture
+	std::string gTreeFileName = "./../common/textures/tree.ppm";
 	// House Object
 	std::string gHouseFileName = "./../common/objects/house/house_obj.obj";
 	// Chapel Object

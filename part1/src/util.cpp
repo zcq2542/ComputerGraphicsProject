@@ -77,6 +77,9 @@ GLuint CompileShader(GLuint type, const std::string& source){
 	}else if(type == GL_FRAGMENT_SHADER){
 		shaderObject = glCreateShader(GL_FRAGMENT_SHADER);
 	}
+    else if(type == GL_GEOMETRY_SHADER){
+        shaderObject = glCreateShader(GL_GEOMETRY_SHADER);
+    }
 
 	const char* src = source.c_str();
 	// The source of our shader
@@ -99,7 +102,9 @@ GLuint CompileShader(GLuint type, const std::string& source){
 			std::cout << "ERROR: GL_VERTEX_SHADER compilation failed!\n" << errorMessages << "\n";
 		}else if(type == GL_FRAGMENT_SHADER){
 			std::cout << "ERROR: GL_FRAGMENT_SHADER compilation failed!\n" << errorMessages << "\n";
-		}
+		}else{
+            std::cout << "ERROR: Other SHADER compilation failed!\n" << errorMessages << "\n";
+        }
 		// Reclaim our memory
 		delete[] errorMessages;
 
@@ -138,12 +143,55 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
     // Validate our program
     glValidateProgram(programObject);
 
+    GLint success;
+    glGetProgramiv(programObject, GL_LINK_STATUS, &success);
+    if (!success) {
+        GLchar infoLog[512];
+        glGetProgramInfoLog(programObject, 512, NULL, infoLog);
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+    }
+
+
     // Once our final program Object has been created, we can
 	// detach and then delete our individual shaders.
     glDetachShader(programObject,myVertexShader);
     glDetachShader(programObject,myFragmentShader);
 	// Delete the individual shaders once we are done
     glDeleteShader(myVertexShader);
+    glDeleteShader(myFragmentShader);
+
+    return programObject;
+}
+
+GLuint Create3ShaderProgram(const std::string& vertexShaderSource, const std::string& geometryShaderSource, const std::string& fragmentShaderSource){
+
+    // Create a new program object
+    GLuint programObject = glCreateProgram();
+
+    // Compile our shaders
+    GLuint myVertexShader   = CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
+    GLuint myFragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    GLuint myGeometryShader = CompileShader(GL_GEOMETRY_SHADER, geometryShaderSource);
+
+    // Link our two shader programs together.
+	// Consider this the equivalent of taking two .cpp files, and linking them into
+	// one executable file.
+    glAttachShader(programObject,myVertexShader);
+    glAttachShader(programObject,myGeometryShader);
+    glAttachShader(programObject,myFragmentShader);
+    glLinkProgram(programObject);
+
+    // Validate our program
+    glValidateProgram(programObject);
+
+    // Once our final program Object has been created, we can
+	// detach and then delete our individual shaders.
+    glDetachShader(programObject,myVertexShader);
+    glDetachShader(programObject,myGeometryShader);
+    glDetachShader(programObject,myFragmentShader);
+	// Delete the individual shaders once we are done
+    glDeleteShader(myVertexShader);
+    glDeleteShader(myGeometryShader);
     glDeleteShader(myFragmentShader);
 
     return programObject;
@@ -175,13 +223,47 @@ std::vector<glm::vec2> RandomObjectsPlacement() {
 
     // Pick the first 4 nonidentical glm::vec2
     std::vector<glm::vec2> selectedVecs(selectableCoordsArray.begin(), selectableCoordsArray.begin() + 4);
+    return selectedVecs;
+}
 
-    // Print the selected glm::vec2
-    std::cout << "selectedVecs: " << std::endl;
-    for (const auto& vec : selectedVecs) {
-        std::cout << "(" << vec.x << ", " << vec.y << ")\n";
+/**
+ * Creates a array of possible (x,z) coordinates to place trees and return an array 
+ * with random coordinates that can be used to place trees without interfering with structure objects
+ * @param objectsCoords reserved coords for objects
+ * @param numOfTrees number of trees to be placed, default as 40
+ * 
+ * @return array of 40 random coordinates
+*/
+std::vector<glm::vec2> RandomTreesPlacement(std::vector<glm::vec2>& objectsCoords, int numOfTrees) {
+    std::vector<glm::vec2> selectedVecs;    // x, z coordinate
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    // Define the range
+    std::uniform_real_distribution<float> dis(-19.5, 19.5);
+
+    for (int i = 0; i <= numOfTrees; i ++) {
+        // Generate random coordinates
+        float x = dis(gen);
+        float y = dis(gen);
+        bool isValid = true;
+        // Exclude origin 
+        if (x != 0.f && y != 0.f) {
+            // Check against previous selected objects coords
+            for (const auto& objCoord : objectsCoords) {
+                float distance = glm::length(glm::vec2(x, y) - objCoord);
+                if (distance < 2.0f) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            // Only select the valid coords for trees
+            if (isValid) {
+                selectedVecs.push_back(glm::vec2(x, y));
+            }
+        }
     }
 
     return selectedVecs;
 }
-

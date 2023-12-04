@@ -48,6 +48,9 @@ GLuint CompileShader(GLuint type, const std::string& source);
 */
 GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 
+GLuint Create3ShaderProgram(const std::string& vertexShaderSource, const std::string& geometryShaderSource, const std::string& fragmentShaderSource);
+
+
 /**
  * Creates a array of possible (x,z) coordinates to place objects and return an array 
  * with 4 random coordinates that can be used to place 4 objects
@@ -55,5 +58,15 @@ GLuint CreateShaderProgram(const std::string& vertexShaderSource, const std::str
  * @return array of 4 random coordinates
 */
 std::vector<glm::vec2> RandomObjectsPlacement();
+
+/**
+ * Creates a array of possible (x,z) coordinates to place trees and return an array 
+ * with random coordinates that can be used to place trees without interfering with structure objects
+ * @param objectsCoords reserved coords for objects
+ * @param numOfTrees number of trees to be placed, default to be 40
+ * 
+ * @return array of random coordinates
+*/
+std::vector<glm::vec2> RandomTreesPlacement(std::vector<glm::vec2>& objectsCoords, int numOfTrees=40);
 
 #endif

@@ -176,7 +176,7 @@ void Camera::CheckBattery(){
     if(HeadLightOn == 1){
         if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
-            std::cout << "out of battery" << std::endl;
+            std::cout << "Out of battery!" << std::endl;
         }
         else if(ShutDownTime - SDL_GetTicks() < 15000 && SDL_GetTicks() > RecoverTime ){
             int rd = rand() % 100;
