@@ -25,10 +25,13 @@
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
+
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
+<<<<<<< HEAD
 std::vector<glm::vec2> gTreesCoords;
 OBJ* grass;
+std::vector<OBJ*> gBatteryOBJs;
 
 BillboardList* trees;
 /**
@@ -80,8 +83,32 @@ void InitializeProgram(){
 		exit(1);
 	}
 
-    // // Initialize Light
-    // g.gLight.Initialize();
+    // Initialize Light
+    //g.gLight.Initialize();
+    /*
+    glm::vec3 BatteryCol = glm::vec3(0.3, 1.0, 0.1);
+
+    g.gBatteries.push_back(Light(glm::vec3(1, -1, -1), BatteryCol));
+    g.gBatteries.push_back(Light(glm::vec3(-1, -1, -1), BatteryCol));
+    g.gBatteries.push_back(Light(glm::vec3(3, -1, 3), BatteryCol));
+    */
+    for(auto& Battery : g.gBatteries){
+        Battery.Initialize();
+    }
+    std::cout << "Battery(light) Initialize" << std::endl;
+
+    for(int i = 0; i < 10; ++i){
+        gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
+    }
+    //OBJ obj1 = OBJ(g.gBatteryFileName);
+    std::cout << "Battery(OBJ) emplace" << std::endl;
+	for (auto& object : gBatteryOBJs) {
+		object->Initialize();
+        object->randomXZCoord(-20, 20);
+	}
+    std::cout << gBatteryOBJs.size() << " Battery(OBJ) Initialize" << std::endl;
+	//gSelectedVecs2 = RandomObjectsPlacement(gBatteryOBJs.size());
+    std::cout << "gSelect for battery" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -92,6 +119,7 @@ void InitializeProgram(){
 	for (auto& object : gObjVector) {
 		object->Initialize();
 	}
+    std::cout << "(OBJ) Initialize" << std::endl;
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
@@ -142,7 +170,10 @@ void PreDraw(){
 */
 void Draw(){
     // Draw objects
+    //g.gCamera.GetBatteryInfo();
     g.gCamera.CheckBattery();
+
+    //std::cout << "(OBJ) start Draw" << std::endl;
 	// House
 	gObjVector[0]->PreDraw(glm::vec3(gSelectedVecs[0].x, -gObjVector[0]->getMinCoord().y, gSelectedVecs[0].y), 30.f);
 	gObjVector[0]->Draw();
@@ -170,6 +201,26 @@ void Draw(){
     // Draw trees
     trees->PreDraw();
     trees->Draw();
+    //std::cout << "(OBJ) Draw" << std::endl;
+
+    //std::cout << "gBatteryOBJs.size(): " << gBatteryOBJs.size() << std::endl;
+    for(int i = 0; i < gBatteryOBJs.size(); ++i){
+        //std::cout << "coor" << gBatteryOBJs[i]->getObjectCoord().x << ", " << gBatteryOBJs[i]->getObjectCoord().y << ", " << gBatteryOBJs[i]->getObjectCoord().z << std::endl;
+        //if(gBatteryOBJs[i]->getObjectCoord() != glm::vec3(0, 0, 0)) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
+        if(gBatteryOBJs[i]->getObjectCoord().y != 0) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
+        else gBatteryOBJs[i]->PreDraw(glm::vec3(gBatteryOBJs[i]->getObjectCoord().x, -gBatteryOBJs[i]->getMinCoord().y, gBatteryOBJs[i]->getObjectCoord().z));
+        gBatteryOBJs[i]->Draw();
+    }
+
+    // Draw light
+    //g.gLight.PreDraw();
+    //g.gLight.Draw();
+    /*
+    for(int i = 0; i < g.gBatteries.size(); ++i){
+        g.gBatteries[i].PreDraw();
+        g.gBatteries[i].Draw();
+    }
+    */
 }
 
 /**
@@ -260,6 +311,7 @@ void WinGame() {
 	// TODO:
 	std::cout << "You Win!" << std::endl;
 }
+
 
 /**
 * Function called in the Main application loop to handle user input
@@ -366,6 +418,21 @@ void Input(){
             g.gPolygonMode = GL_FILL;
         }
     }
+    
+    // check whether get the battery
+    glm::vec3 curPos = g.gCamera.GetEyePosition();
+    for(int i = 0; i < gBatteryOBJs.size(); ++i){
+        if(InOBJ(curPos, gBatteryOBJs[i])){
+            g.gCamera.CollectBattery();
+            std::cout << "Collect Battery i: " << i << std::endl;
+            //delete gBatteryOBJs[i];
+            gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
+            //--i;
+            g.gCamera.GetBatteryInfo();
+            break;
+        }
+    }
+    
 }
 
 
@@ -390,7 +457,7 @@ void MainLoop(){
         // Type of start of frame
 		Uint32 start = SDL_GetTicks();
 		// Handle Input
-		Input();
+		//Input();
 		// Setup anything (i.e. OpenGL State) that needs to take
 		// place before draw calls
 
@@ -406,7 +473,7 @@ void MainLoop(){
         //      The pipeline that is utilized is whatever 'glUseProgram' is
         //      currently binded.
 		Draw();
-
+        Input();
         // Calculate how much time has elapsed
 		// since the start of the frame, and delay
 		// for the difference in milliseconds to attempt
