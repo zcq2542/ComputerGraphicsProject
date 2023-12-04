@@ -172,14 +172,9 @@ glm::vec3 Camera::GetHeadLightCol() {
 }
 
 void Camera::CheckBattery(){
-    //std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     if(HeadLightOn == 1){
         if(SDL_GetTicks() < ShutDownTime){
-            //std::cout << "before update BatteryTime: " << BatteryTime << "ShutdownTime: " << ShutDownTime << std::endl;
             BatteryTime = (int)(ShutDownTime - SDL_GetTicks())/1000;
-            //std::cout << "BatteryTime: " << BatteryTime << "ShutdownTime: " << ShutDownTime << std::endl;
-            //LightStrength = BatteryTime / 15000.0f;
-            //std::cout << "LightStrength: " << LightStrength << std::endl;
         }
         if(SDL_GetTicks() > ShutDownTime){
             SwitchLight();
@@ -200,11 +195,8 @@ void Camera::CheckBattery(){
             int min = 200;
             int max = 1200;
             int randomNumber = min + rand() % (max - min + 1);
-            //std::cout << "randomNuber: " << randomNumber << std::endl;
-            //std::cout << "BatteryTime: " << BatteryTime << std::endl; 
             LightStrength = BatteryTime / 15.0f;
             std::cout << "LightStrength: " << LightStrength << std::endl;
-            //std::cout << "LightStrength: " << LightStrength << std::endl;
             RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
             SwitchLight();
         }
@@ -244,12 +236,8 @@ void Camera::CollectBattery(){
         ShutDownTime += 30 * 1000;
     }
     else {
-        //std::cout << "Before **BatteryTime: " << BatteryTime << std::endl;
         BatteryTime = 30;
         ShutDownTime = SDL_GetTicks() + 30 * 1000;
-        //std::cout << "**BatteryTime: " << BatteryTime << std::endl;
-        //std::cout << "**ShutDownTime: " << ShutDownTime << std::endl;
-
     }
 }
 

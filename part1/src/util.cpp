@@ -211,7 +211,7 @@ std::vector<glm::vec2> RandomObjectsPlacement() {
     for (float x = -15.f; x <= 15.f; x += 5.0f) {
         for (float y = -15.f; y <= 15.f; y += 5.0f) {
             // exclude origin
-            if (x != 0.f && y != 0.f) {
+            if (!(x >= -0.5f && x <= 0.5f && y >= -0.5f && y <= 0.5f)) {
                 selectableCoordsArray.push_back(glm::vec2(x, y));
             }
         }

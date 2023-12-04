@@ -28,7 +28,6 @@
 
 std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
-<<<<<<< HEAD
 std::vector<glm::vec2> gTreesCoords;
 OBJ* grass;
 std::vector<OBJ*> gBatteryOBJs;
@@ -85,30 +84,19 @@ void InitializeProgram(){
 
     // Initialize Light
     //g.gLight.Initialize();
-    /*
-    glm::vec3 BatteryCol = glm::vec3(0.3, 1.0, 0.1);
 
-    g.gBatteries.push_back(Light(glm::vec3(1, -1, -1), BatteryCol));
-    g.gBatteries.push_back(Light(glm::vec3(-1, -1, -1), BatteryCol));
-    g.gBatteries.push_back(Light(glm::vec3(3, -1, 3), BatteryCol));
-    */
     for(auto& Battery : g.gBatteries){
         Battery.Initialize();
     }
-    std::cout << "Battery(light) Initialize" << std::endl;
 
     for(int i = 0; i < 10; ++i){
         gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
     }
-    //OBJ obj1 = OBJ(g.gBatteryFileName);
-    std::cout << "Battery(OBJ) emplace" << std::endl;
 	for (auto& object : gBatteryOBJs) {
 		object->Initialize();
         object->randomXZCoord(-20, 20);
 	}
-    std::cout << gBatteryOBJs.size() << " Battery(OBJ) Initialize" << std::endl;
-	//gSelectedVecs2 = RandomObjectsPlacement(gBatteryOBJs.size());
-    std::cout << "gSelect for battery" << std::endl;
+    std::cout << gBatteryOBJs.size() << " Batteries are available to pick up. Good Luck!" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -119,7 +107,6 @@ void InitializeProgram(){
 	for (auto& object : gObjVector) {
 		object->Initialize();
 	}
-    std::cout << "(OBJ) Initialize" << std::endl;
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
@@ -152,7 +139,6 @@ void PreDraw(){
     // Initialize clear color
     // This is the background of the screen.
     glViewport(0, 0, g.gScreenWidth, g.gScreenHeight);
-    //glClearColor( 0.2f, 0.2f, 0.2f, 1.f );
     glClearColor( 0.0f, 0.0f, 0.0f, 1.f );
 
     // Clear color buffer and Depth Buffer
@@ -201,12 +187,8 @@ void Draw(){
     // Draw trees
     trees->PreDraw();
     trees->Draw();
-    //std::cout << "(OBJ) Draw" << std::endl;
 
-    //std::cout << "gBatteryOBJs.size(): " << gBatteryOBJs.size() << std::endl;
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
-        //std::cout << "coor" << gBatteryOBJs[i]->getObjectCoord().x << ", " << gBatteryOBJs[i]->getObjectCoord().y << ", " << gBatteryOBJs[i]->getObjectCoord().z << std::endl;
-        //if(gBatteryOBJs[i]->getObjectCoord() != glm::vec3(0, 0, 0)) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
         if(gBatteryOBJs[i]->getObjectCoord().y != 0) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
         else gBatteryOBJs[i]->PreDraw(glm::vec3(gBatteryOBJs[i]->getObjectCoord().x, -gBatteryOBJs[i]->getMinCoord().y, gBatteryOBJs[i]->getObjectCoord().z));
         gBatteryOBJs[i]->Draw();
@@ -424,10 +406,9 @@ void Input(){
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
         if(InOBJ(curPos, gBatteryOBJs[i])){
             g.gCamera.CollectBattery();
-            std::cout << "Collect Battery i: " << i << std::endl;
-            //delete gBatteryOBJs[i];
+            std::cout << "Collected Battery!" << std::endl;
+            // delete gBatteryOBJs[i];
             gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
-            //--i;
             g.gCamera.GetBatteryInfo();
             break;
         }
@@ -456,8 +437,7 @@ void MainLoop(){
 	while(!g.gQuit){
         // Type of start of frame
 		Uint32 start = SDL_GetTicks();
-		// Handle Input
-		//Input();
+		
 		// Setup anything (i.e. OpenGL State) that needs to take
 		// place before draw calls
 
@@ -473,6 +453,8 @@ void MainLoop(){
         //      The pipeline that is utilized is whatever 'glUseProgram' is
         //      currently binded.
 		Draw();
+
+		// Handle Input
         Input();
         // Calculate how much time has elapsed
 		// since the start of the frame, and delay

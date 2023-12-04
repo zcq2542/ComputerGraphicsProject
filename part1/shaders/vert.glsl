@@ -14,7 +14,7 @@ uniform mat4 u_ModelMatrix;
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_Projection; // We'll use a perspective projection
 
-uniform int u_BumpMapEmpty;
+//uniform int u_BumpMapEmpty;
 
 uniform vec3 u_ViewDirection; // camera view direction
 uniform vec3 u_EyePosition;
@@ -64,18 +64,12 @@ void main()
   // calculate TBN
   mat3 TBN = calculateTBN();
   mat3 transTBN = transpose(TBN);
-  if(u_BumpMapEmpty == 0){
-      TangentLightPos = transTBN * (u_Light[0].lightPos);
-      TangentViewPos = transTBN * u_ViewDirection;
-      TangentFragPos = transTBN * v_worldSpaceFragment;
-      TangentHeadLightPos = transTBN * u_EyePosition;
-  }
-  else{
-      TangentLightPos = (u_Light[0].lightPos);
-      TangentViewPos = u_ViewDirection;
-      TangentFragPos = v_worldSpaceFragment;
-      TangentHeadLightPos = u_EyePosition;
-  }
+  
+  TangentLightPos = transTBN * (u_Light[0].lightPos);
+  TangentViewPos = transTBN * u_ViewDirection;
+  TangentFragPos = transTBN * v_worldSpaceFragment;
+  TangentHeadLightPos = transTBN * u_EyePosition;
+  
   // Compute the MVP matrix
   gl_Position = u_Projection * u_ViewMatrix * u_ModelMatrix * vec4(position,1.0f);
 
