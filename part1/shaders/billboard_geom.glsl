@@ -1,8 +1,8 @@
 #version 410 core
 
 layout (points) in;
-layout (triangle_strip) out; 
-layout (max_vertices = 4) out;
+layout (triangle_strip, max_vertices = 4) out; 
+//layout (max_vertices = 4) out;
 
 uniform mat4 u_ViewMatrix;
 uniform mat4 u_Projection;
@@ -21,7 +21,7 @@ void main()
     vec3 up = vec3(0.0, 1.0, 0.0);
     vec3 right = cross(toCamera, up);
     vec3 normal = toCamera;
-    vec3 fragPos;
+    //vec3 fragPos;
     float halfSize = 0.5; // Half size of the billboard quad
 
     // Bottom left
