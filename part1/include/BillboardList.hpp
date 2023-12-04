@@ -18,13 +18,13 @@ public:
     BillboardList(std::string fileName);
     ~BillboardList();
     
-    void SetPos(vector<float>& pos);
+    void SetPos(std::vector<float>& pos);
     void RandomSetPos(int m, int n); 
     void Initialize();
     void PreDraw();
     void Draw();
 private:
-    vector<float> treePos;
+    std::vector<float> treePos;
     GLuint mVAO = 0;
     GLuint mVBO[2];
     GLuint mShaderID = 0;
@@ -32,4 +32,4 @@ private:
     void CreateGraphicsPipeline();
     void VertexSpecification();
 
-}
+};

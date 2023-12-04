@@ -11,7 +11,7 @@
 
 BillboardList::BillboardList(std::string fileName){
     mTexture = new Texture();
-    mTexture->LoadTexture(filename);
+    mTexture->LoadTexture(fileName);
 }
 
 BillboardList::~BillboardList(){
@@ -24,8 +24,8 @@ BillboardList::~BillboardList(){
 
 }
 
-void BillboardList::SetPos(vector<float>& pos){
-    this.treePos = pos;
+void BillboardList::SetPos(std::vector<float>& pos){
+    this->treePos = pos;
 }
 
 void BillboardList::Initialize(){
@@ -41,6 +41,8 @@ void BillboardList::CreateGraphicsPipeline(){
     std::string fragmentShaderSource    = LoadShaderAsString("./shaders/billboard_frag.glsl");
 
     mShaderID = Create3ShaderProgram(vertexShaderSource,geometryShaderSource, fragmentShaderSource);
+    std::cout << "Create mShaderID: " << mShaderID << std::endl;
+
 
 }
 
@@ -59,13 +61,19 @@ void BillboardList::VertexSpecification(){
     glBufferData(GL_ARRAY_BUFFER, treePos.size() * sizeof(float), treePos.data(), GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glVertexAttribDivisor(0, 3);
-
+    glVertexAttribDivisor(0, 1);
+    
+    // Unbind our currently bound Vertex Array Object
+    glBindVertexArray(0);
+    // Disable any attributes we opened in our Vertex Attribute Arrray,
+    // as we do not want to leave them open.
+    glDisableVertexAttribArray(0);
 }
 
 void BillboardList::PreDraw(){
     // Use our shader
     glUseProgram(mShaderID);
+    std::cout << "using mShaderID: " << mShaderID << std::endl;
     
     // Update the View Matrix
     GLint u_ViewMatrixLocation = glGetUniformLocation(mShaderID,"u_ViewMatrix");
@@ -74,7 +82,7 @@ void BillboardList::PreDraw(){
         glUniformMatrix4fv(u_ViewMatrixLocation,1,GL_FALSE,&viewMatrix[0][0]);
     }else{
         std::cout << "Could not find u_ViewMatrix, maybe a mispelling?\n";
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Projection matrix (in perspective) 
@@ -89,7 +97,7 @@ void BillboardList::PreDraw(){
         glUniformMatrix4fv(u_ProjectionLocation,1,GL_FALSE,&perspective[0][0]);
     }else{
         std::cout << "Could not find u_Perspective, maybe a mispelling?\n";
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Setup view direction
@@ -98,7 +106,7 @@ void BillboardList::PreDraw(){
         glUniform3fv(viewDirectionLocation, 1, &g.gCamera.GetViewDirection()[0]);
     }else{
         std::cout << "Could not find u_ViewDirection" << std::endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     // Setup eye position
@@ -150,7 +158,7 @@ void BillboardList::PreDraw(){
     }
     
     //
-    mTextureDiffuse->Bind(0);
+    mTexture->Bind(0);
     std::string uniformName = "textureSampler";
         GLint u_diffuseTextureLocation = glGetUniformLocation(mShaderID, uniformName.c_str());
         if(u_diffuseTextureLocation>=0){
@@ -169,9 +177,9 @@ void BillboardList::PreDraw(){
 *
 * @return void
 */
-void Billboard::Draw(){
+void BillboardList::Draw(){
     // Render data
     glBindVertexArray(mVAO);
-    glDrawArraysinstanced(GL_TRIANGLE_STRIP, 0, 4, treePos.size()/3); // very Instance 4 point
+    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, treePos.size()/3); // very Instance 4 point
 }
 

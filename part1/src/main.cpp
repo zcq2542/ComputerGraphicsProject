@@ -21,7 +21,7 @@
 #include "OBJ.hpp"
 #include "Light.hpp"
 #include "util.hpp"
-
+#include "BillboardList.hpp"
 // vvvvvvvvvvvvvvvvvvvvvvvvvv Globals vvvvvvvvvvvvvvvvvvvvvvvvvv
 // Globals generally are prefixed with 'g' in this application.
 #include "globals.hpp"
@@ -29,6 +29,7 @@ std::vector<OBJ*> gObjVector;
 std::vector<glm::vec2> gSelectedVecs;
 OBJ* grass;
 
+BillboardList* trees;
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
 * and the OpenGL Context (with the appropriate version)
@@ -81,6 +82,10 @@ void InitializeProgram(){
     // Initialize Light
     g.gLight.Initialize();
 
+    trees = new BillboardList(g.gTreeFileName);
+    std::vector<float> treesPos{1,0,1,2,0,2,3,0,3};
+    trees->SetPos(treesPos);
+    trees->Initialize();
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
 	gObjVector.push_back(new OBJ(g.gChapelFileName));
@@ -158,6 +163,10 @@ void Draw(){
     // Draw light
     g.gLight.PreDraw();
     g.gLight.Draw();
+
+    // Draw trees
+    trees->PreDraw();
+    trees->Draw();
 }
 
 /**
@@ -411,6 +420,7 @@ void CleanUp(){
 	
 	delete grass;
 
+    if(trees) delete trees;
 	//Quit SDL subsystems
 	SDL_Quit();
 }

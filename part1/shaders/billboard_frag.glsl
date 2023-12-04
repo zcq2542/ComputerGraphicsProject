@@ -9,6 +9,7 @@ uniform sampler2D textureSampler;
 uniform vec3 u_ViewDirection;
 uniform vec3 u_EyePosition;
 uniform vec3 u_HeadLightCol;
+uniform float u_HeadLightScope;
 uniform int u_HeadLightOn;
 uniform float u_HeadLightStrength;
 
@@ -19,7 +20,6 @@ float calculateAngle(vec3 A, vec3 B) {
 
 vec4 HeadLight(){
     if(u_HeadLightOn != 0){
-        vec3 normals = normalize(v_vertexNormals);
         vec3 headLightDirection;
         vec3 ambient;
         vec3 diffuse = vec3(0.0f, 0.0f, 0.0f);
@@ -32,7 +32,7 @@ vec4 HeadLight(){
         float quadratic = 0.032;  //0.032; // Quadratic attenuation
 
         headLightDirection = normalize(u_EyePosition - fragPos);
-        colorDiffuse = texture(textureSampler, texCoord);
+        vec3 colorDiffuse = texture(textureSampler, texCoord).rgb;
 
         // Ambient lighting
         ambient = headLightAmbientIntensity * u_HeadLightCol * colorDiffuse;
@@ -55,8 +55,10 @@ vec4 HeadLight(){
             specular = attenuation * headLightStren *  specularStrength * u_HeadLightCol * (spec) * colorDiffuse;
 
             // Send fragment to output with specular
-            headLight = vec4(ambient + diffuse + specular, 1.0f);
+            vec4 headLight = vec4(ambient + diffuse + specular, 1.0f);
             return headLight;
+        }
+    }
 }
 
 void main()
