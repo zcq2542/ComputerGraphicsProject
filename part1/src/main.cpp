@@ -27,12 +27,12 @@
 #include "globals.hpp"
 
 std::vector<OBJ*> gObjVector;
+std::vector<OBJ*> gBatteryOBJs;
+OBJ* grass;
 std::vector<glm::vec2> gSelectedVecs;
 std::vector<glm::vec2> gTreesCoords;
-OBJ* grass;
-std::vector<OBJ*> gBatteryOBJs;
+std::vector<BillboardList*> gTrees;
 
-BillboardList* trees;
 /**
 * Initialization of the graphics application. Typically this will involve setting up a window
 * and the OpenGL Context (with the appropriate version)
@@ -111,12 +111,20 @@ void InitializeProgram(){
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
 
-	// Initialize Trees
-    trees = new BillboardList(g.gTreeFileName);
-    gTreesCoords = RandomTreesPlacement(gSelectedVecs, 500);
-    trees->SetPos(gTreesCoords);
-    trees->Initialize();
+	// Initialize 4 kinds of Trees 
+	gTrees.push_back(new BillboardList(g.gTreeFileName));
+	gTrees.push_back(new BillboardList(g.gTreeFileName1));
+	gTrees.push_back(new BillboardList(g.gTreeFileName2));
+	gTrees.push_back(new BillboardList(g.gTreeFileName3));
 
+	for (auto& tree : gTrees) {
+		std::vector<glm::vec2> treeCoords = RandomTreesPlacement(gSelectedVecs, 100);
+    	gTreesCoords.insert(gTreesCoords.end(), treeCoords.begin(), treeCoords.end());
+		tree->SetPos(treeCoords);
+    	tree->Initialize();
+	}
+   
+	// Initialize Grass
 	grass = new OBJ(g.gGrassFileName);
 	grass->Initialize();
 }
@@ -185,8 +193,10 @@ void Draw(){
     // g.gLight.Draw();
 
     // Draw trees
-    trees->PreDraw();
-    trees->Draw();
+	for (auto& tree : gTrees) {
+		tree->PreDraw();
+    	tree->Draw();
+	}
 
     for(int i = 0; i < gBatteryOBJs.size(); ++i){
         if(gBatteryOBJs[i]->getObjectCoord().y != 0) gBatteryOBJs[i]->PreDraw(gBatteryOBJs[i]->getObjectCoord());
@@ -407,7 +417,7 @@ void Input(){
         if(InOBJ(curPos, gBatteryOBJs[i])){
             g.gCamera.CollectBattery();
             std::cout << "Collected Battery!" << std::endl;
-            // delete gBatteryOBJs[i];
+            delete gBatteryOBJs[i];
             gBatteryOBJs.erase(gBatteryOBJs.begin() + i);
             g.gCamera.GetBatteryInfo();
             break;
@@ -484,15 +494,26 @@ void CleanUp(){
 	SDL_DestroyWindow(g.gGraphicsApplicationWindow);
 	g.gGraphicsApplicationWindow = nullptr;
 
-	//Delete all objects in gObjVector
+	//Delete all objects 
 	for (auto& object : gObjVector) {
         delete object;
     }
-    gObjVector.clear();
+	gObjVector.clear();
+
+	for (auto& tree : gTrees) {
+        delete tree;
+    }
+	gTrees.clear();
+
+	for (auto& battery : gBatteryOBJs) {
+		delete battery;
+	}
+	gBatteryOBJs.clear();
+	gSelectedVecs.clear();
+	gTreesCoords.clear();
 	
 	delete grass;
 
-    if(trees) delete trees;
 	//Quit SDL subsystems
 	SDL_Quit();
 }

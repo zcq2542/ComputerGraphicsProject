@@ -196,12 +196,12 @@ void Camera::CheckBattery(){
             int max = 1200;
             int randomNumber = min + rand() % (max - min + 1);
             LightStrength = BatteryTime / 15.0f;
-            std::cout << "LightStrength: " << LightStrength << std::endl;
+            std::cout << "Flashlight Strength: " << LightStrength << std::endl;
             RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
             SwitchLight();
         }
         else{
-            std::cout << "batery refill" << std::endl;
+            std::cout << "Batery refilled!" << std::endl;
             LightStrength = 1;
             SwitchLight();
         }
@@ -212,13 +212,13 @@ void Camera::SwitchLight(){
     if(HeadLightOn == 1){
         BatteryTime = (ShutDownTime - SDL_GetTicks()) / 1000; // ms to s
         HeadLightOn = 0;
-        std::cout << "turn off" << std::endl;
+        // std::cout << "turn off" << std::endl;
     }
 
     else if(HeadLightOn == 0 && BatteryTime > 0){
         ShutDownTime = SDL_GetTicks()+BatteryTime * 1000; // s to ms
         HeadLightOn = 1;
-        std::cout << "turn on" << std::endl;
+        // std::cout << "turn on" << std::endl;
     }
 }
 
@@ -243,9 +243,9 @@ void Camera::CollectBattery(){
 
 void Camera::GetBatteryInfo(){
     std::cout << "BatteryTime: " << BatteryTime << std::endl;
-    std::cout << "ShutDownTime: " << ShutDownTime << std::endl;
-    std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
-    std::cout << "HeadLightStrength: " << LightStrength << std::endl;
+    // std::cout << "ShutDownTime: " << ShutDownTime << std::endl;
+    // std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
+    // std::cout << "HeadLightStrength: " << LightStrength << std::endl;
 
 }
 

@@ -23,8 +23,8 @@ struct Global{
 	SDL_GLContext gOpenGLContext			= nullptr;
 
 	// xz plane dimension boundary of map
-	float gMaxValue 						= 25.f;
-	float gMinValue							= -25.f;
+	float gMaxValue 						= 20.f;
+	float gMinValue							= -20.f;
 
 	// Main loop flag
 	bool gQuit = false; // If this is quit = 'true' then the program terminates.
@@ -44,7 +44,12 @@ struct Global{
     std::vector<Light> glights;
 
 	// Tree texture
-	std::string gTreeFileName = "./../common/textures/tree.ppm";
+	std::string gTreeFileName = "./../common/textures/tree2.ppm";
+	std::string gTreeFileName1 = "./../common/textures/tree2.ppm";
+	std::string gTreeFileName2 = "./../common/textures/oak.ppm";
+	std::string gTreeFileName3 = "./../common/textures/pine.ppm";
+
+	// Batteries
     std::vector<Light> gBatteries;
 
 	// Battery Object
@@ -59,10 +64,6 @@ struct Global{
 	std::string gChaliceFileName = "./../common/objects/Chalice/Stone_Chalic_OBJ.obj";
 	// Grass Object
 	std::string gGrassFileName = "./../common/objects/grass/grass.obj";
-	// Tree Objects
-	std::string gTreeFileName1 = "./../common/objects";
-	std::string gTreeFileName2 = "./../common/objects";
-	std::string gTreeFileName3 = "./../common/objects";
 };
 
 // External linkage such that the

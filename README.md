@@ -1,6 +1,6 @@
 *TODO*: Please edit the following information in your final project
 
-## Title: Edit this line -- Put your 'title' of your project here
+## Title: Deep In Woods
 
 ## YouTube/Dropbox/Drive Link: Edit this line -- Put your link to your video(Preferably on YouTube) here (see deliverables).
 
@@ -18,6 +18,19 @@
   * *edit this*
   * *edit this*
   * (Optional) What was the most interesting part of the Final Assignment? How could the instructor improve the final project?
+
+### About this game "Deep In Woods"
+* This is a game of a person in the woods with a flashlight in hand that only lasts for 30 seconds. 
+* The main objective is to find the target "Chalice". 
+* Your flashlight will run out of battery over time. Collect batteries on the group to extend its duration. Every battery will extend light the duration for another 30 seconds. 
+* It is game over if you cannot collect a battery within 10 seconds after your flashlight run out of battery.
+
+### Techniques used 
+* Phong Lighting
+* Texture
+* Billboarding
+* Instancing
+* Collision calculation
 
 ### Rubric
 

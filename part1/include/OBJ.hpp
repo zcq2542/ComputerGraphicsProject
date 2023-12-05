@@ -84,9 +84,9 @@ private:
     GLuint mVBO[5];
     GLuint mShaderID = 0;
 
-    Texture* mTextureDiffuse;
-    Texture* mTextureNormal;
-    Texture* mTextureSpecular;
+    Texture* mTextureDiffuse = nullptr;
+    Texture* mTextureNormal = nullptr;
+    Texture* mTextureSpecular = nullptr;
 
     void clear();
 
