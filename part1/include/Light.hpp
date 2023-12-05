@@ -29,7 +29,7 @@ struct Light{
     void Initialize();
 
     // Operations that happen before drawing
-    void PreDraw();
+    void PreDraw(glm::vec3 tragetCoord);
 	// Draw a light
 	void Draw();
 

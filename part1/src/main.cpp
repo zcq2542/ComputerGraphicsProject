@@ -82,8 +82,8 @@ void InitializeProgram(){
 		exit(1);
 	}
 
-    // Initialize Light
-    //g.gLight.Initialize();
+    // // Initialize Light
+    // g.gLight.Initialize();
 
     for(auto& Battery : g.gBatteries){
         Battery.Initialize();
@@ -96,7 +96,7 @@ void InitializeProgram(){
 		object->Initialize();
         object->randomXZCoord(-20, 20);
 	}
-    std::cout << gBatteryOBJs.size() << " Batteries are available to pick up. Good Luck!" << std::endl;
+    // std::cout << gBatteryOBJs.size() << " Batteries are available to pick up. Good Luck!" << std::endl;
 
 	// Initialize objects
 	gObjVector.push_back(new OBJ(g.gHouseFileName));
@@ -107,6 +107,8 @@ void InitializeProgram(){
 	for (auto& object : gObjVector) {
 		object->Initialize();
 	}
+
+	std::cout << "Generating forest, please wait..." << std::endl;
 
 	// Initialize coordinates to place objects
 	gSelectedVecs = RandomObjectsPlacement();
@@ -127,6 +129,8 @@ void InitializeProgram(){
 	// Initialize Grass
 	grass = new OBJ(g.gGrassFileName);
 	grass->Initialize();
+
+	std::cout << gBatteryOBJs.size() << " Batteries are available to pick up. Good Luck!" << std::endl;
 }
 
 /**
@@ -164,7 +168,6 @@ void PreDraw(){
 */
 void Draw(){
     // Draw objects
-    //g.gCamera.GetBatteryInfo();
     g.gCamera.CheckBattery();
 
     //std::cout << "(OBJ) start Draw" << std::endl;
@@ -188,10 +191,6 @@ void Draw(){
 	grass->PreDraw(glm::vec3(0.0f, 0.0f, 0.0f));
 	grass->Draw();
 
-    // // Draw light
-    // g.gLight.PreDraw();
-    // g.gLight.Draw();
-
     // Draw trees
 	for (auto& tree : gTrees) {
 		tree->PreDraw();
@@ -207,12 +206,6 @@ void Draw(){
     // Draw light
     //g.gLight.PreDraw();
     //g.gLight.Draw();
-    /*
-    for(int i = 0; i < g.gBatteries.size(); ++i){
-        g.gBatteries[i].PreDraw();
-        g.gBatteries[i].Draw();
-    }
-    */
 }
 
 /**
@@ -300,7 +293,7 @@ bool HasCollision(glm::vec3 cameraEyePosition, std::vector<OBJ*> gObjVector) {
  * Function to handle event right after winning the game
 */
 void WinGame() {
-	// TODO:
+	// TODO: in the future we can add particle effects such as fire or fireworks here
 	std::cout << "You Win!" << std::endl;
 }
 
@@ -395,7 +388,15 @@ void Input(){
 		g.gCamera.SetCameraEyePosition(g.gCamera.GetEyeInitialPosition().x,
 		 								g.gCamera.GetEyeInitialPosition().y,
 		  								g.gCamera.GetEyeInitialPosition().z);
-		g.gCamera.SetViewDirection(0.0f, 0.0f, -1.0f);
+	}
+
+	// Press G to teleport player near Chalice
+	if (state[SDL_SCANCODE_G]) {
+		SDL_Delay(250); 
+		g.gCamera.SetCameraEyePosition(gSelectedVecs[3].x+1.f,
+		 								g.gCamera.GetEyeInitialPosition().y,
+		  								gSelectedVecs[3].y+1.f);
+		// g.gCamera.SetViewDirection(-1.0f, -0.5f, -1.0f);
 	}
 
 	// Press TAB to switch between fill and line mode
@@ -453,7 +454,8 @@ void MainLoop(){
 
 		if (g.gWin) {
 			WinGame();
-			// g.gQuit = true;
+			SDL_Delay(1000); 
+			g.gQuit = true;
 		}
 
 		PreDraw();
@@ -525,10 +527,12 @@ void CleanUp(){
 * @return program status
 */
 int main( int argc, char* args[] ){
+	std::cout << "Your goal is to find the Chalice!\n";
     std::cout << "Use WASD keys to move forward, left, backward, and right\n";
 	std::cout << "Use mouse to look around\n";
     std::cout << "Use TAB to toggle wireframe\n";
 	std::cout << "Press R to reset player position\n";
+	std::cout << "Press G to teleport player near Chalice (Cheat)\n";
     std::cout << "Press ESC to quit\n";
 
 	// 1. Setup the graphics program

@@ -53,7 +53,7 @@ vec4 HeadLight(){
             float diff =  max(0.0, dot(headLightDirection, fragNormal));
             //float diff =  1.f;
 
-            diffuse = 0.5 * attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse ;
+            diffuse = 0.6 * attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse ;
             //diffuse = colorDiffuse;
 
             // specular light
@@ -80,7 +80,7 @@ void main()
     fragColor = HeadLight();
     
     // discard black color in tree
-    if (fragColor.r <= 0.05 && fragColor.g <= 0.05 && fragColor.b <= 0.05) {
+    if (fragColor.r <= 0.02 && fragColor.g <= 0.02 && fragColor.b <= 0.02) {
         discard;
     }
 }

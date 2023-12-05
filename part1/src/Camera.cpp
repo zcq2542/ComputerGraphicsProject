@@ -201,7 +201,7 @@ void Camera::CheckBattery(){
             SwitchLight();
         }
         else{
-            std::cout << "Batery refilled!" << std::endl;
+            std::cout << "Battery refilled!" << std::endl;
             LightStrength = 1;
             SwitchLight();
         }
@@ -264,7 +264,7 @@ Camera::Camera(){
     //m_headLight = Light(m_eyePosition, headLightCol, m_viewDirection, 0.8f, 0.0f);
     HeadLightOn = 1;
     BatteryTime = 70;
-    ShutDownTime = SDL_GetTicks() + BatteryTime * 1000; // batery time is 70s.
+    ShutDownTime = SDL_GetTicks() + BatteryTime * 1000; // battery time is 70s.
     RecoverTime = 0;
     LightStrength = 1.5f;
 

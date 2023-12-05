@@ -48,42 +48,42 @@ void Light::Initialize()
 
     // Draw a cube to represent the light
     const std::vector<GLfloat> vertices{
-            -0.1f,-0.1f,-0.1f,  // triangle 1 : begin
-            -0.1f,-0.1f, 0.1f,
-            -0.1f, 0.1f, 0.1f,  // triangle 1 : end
-            0.1f, 0.1f,-0.1f,   // triangle 2 : begin
-            -0.1f,-0.1f,-0.1f,
-            -0.1f, 0.1f,-0.1f,  // triangle 2 : end
-            0.1f,-0.1f, 0.1f,
-            -0.1f,-0.1f,-0.1f,
-            0.1f,-0.1f,-0.1f,
-            0.1f, 0.1f,-0.1f,
-            0.1f,-0.1f,-0.1f,
-            -0.1f,-0.1f,-0.1f,
-            -0.1f,-0.1f,-0.1f,
-            -0.1f, 0.1f, 0.1f,
-            -0.1f, 0.1f,-0.1f,
-            0.1f,-0.1f, 0.1f,
-            -0.1f,-0.1f, 0.1f,
-            -0.1f,-0.1f,-0.1f,
-            -0.1f, 0.1f, 0.1f,
-            -0.1f,-0.1f, 0.1f,
-            0.1f,-0.1f, 0.1f,
-            0.1f, 0.1f, 0.1f,
-            0.1f,-0.1f,-0.1f,
-            0.1f, 0.1f,-0.1f,
-            0.1f,-0.1f,-0.1f,
-            0.1f, 0.1f, 0.1f,
-            0.1f,-0.1f, 0.1f,
-            0.1f, 0.1f, 0.1f,
-            0.1f, 0.1f,-0.1f,
-            -0.1f, 0.1f,-0.1f,
-            0.1f, 0.1f, 0.1f,
-            -0.1f, 0.1f,-0.1f,
-            -0.1f, 0.1f, 0.1f,
-            0.1f, 0.1f, 0.1f,
-            -0.1f, 0.1f, 0.1f,
-            0.1f,-0.1f, 0.1f
+            -0.05f,-0.05f,-0.05f,  // triangle 1 : begin
+            -0.05f,-0.05f, 0.05f,
+            -0.05f, 0.05f, 0.05f,  // triangle 1 : end
+            0.05f, 0.05f,-0.05f,   // triangle 2 : begin
+            -0.05f,-0.05f,-0.05f,
+            -0.05f, 0.05f,-0.05f,  // triangle 2 : end
+            0.05f,-0.05f, 0.05f,
+            -0.05f,-0.05f,-0.05f,
+            0.05f,-0.05f,-0.05f,
+            0.05f, 0.05f,-0.05f,
+            0.05f,-0.05f,-0.05f,
+            -0.05f,-0.05f,-0.05f,
+            -0.05f,-0.05f,-0.05f,
+            -0.05f, 0.05f, 0.05f,
+            -0.05f, 0.05f,-0.05f,
+            0.05f,-0.05f, 0.05f,
+            -0.05f,-0.05f, 0.05f,
+            -0.05f,-0.05f,-0.05f,
+            -0.05f, 0.05f, 0.05f,
+            -0.05f,-0.05f, 0.05f,
+            0.05f,-0.05f, 0.05f,
+            0.05f, 0.05f, 0.05f,
+            0.05f,-0.05f,-0.05f,
+            0.05f, 0.05f,-0.05f,
+            0.05f,-0.05f,-0.05f,
+            0.05f, 0.05f, 0.05f,
+            0.05f,-0.05f, 0.05f,
+            0.05f, 0.05f, 0.05f,
+            0.05f, 0.05f,-0.05f,
+            -0.05f, 0.05f,-0.05f,
+            0.05f, 0.05f, 0.05f,
+            -0.05f, 0.05f,-0.05f,
+            -0.05f, 0.05f, 0.05f,
+            0.05f, 0.05f, 0.05f,
+            -0.05f, 0.05f, 0.05f,
+            0.05f,-0.05f, 0.05f
     };  
 
     // Vertex Arrays Object (VAO) Setup
@@ -107,22 +107,23 @@ void Light::Initialize()
     glDisableVertexAttribArray(0);
 }
  
-void Light::PreDraw(){
+void Light::PreDraw(glm::vec3 tragetCoord){
     // Use the light shader prior to drawing
     glUseProgram(mShaderID);
 
     // Update Light position on xz-plane 
     static float increment=0.0f;
-    increment += 0.01f;
+    increment += 0.1f;
     if(increment > 2*M_PI) { increment=0.0f;}
     
-    mPosition.x = cos(increment) * 3.f;
+    mPosition.x = cos(increment) * 0.25f;
     mPosition.y = 0.0f;
-    mPosition.z = sin(increment) * 3.f; 
+    mPosition.z = sin(increment) * 0.25f; 
 
     // Model transformation by translating our object into world space
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model,mPosition); 
+    model = glm::translate(model, tragetCoord); 
+    model = glm::translate(model, mPosition); 
     // View Transformation
     glm::mat4 viewMatrix = g.gCamera.GetViewMatrix();
     // Projection matrix
