@@ -98,6 +98,7 @@ private:
     int BatteryTime;// = 70;
     float LightStrength;
     bool GameOver = false;
+    int CountdownNum = 10;
 };
 
 

@@ -206,12 +206,16 @@ void Camera::CheckBattery(){
             SwitchLight();
         }
     }
+    if(SDL_GetTicks() > ShutDownTime){
+        int nowNum = (int)(ShutDownTime + 11000 - SDL_GetTicks()) /1000;
+        if(CountdownNum > nowNum) { 
+            CountdownNum = nowNum;
+            std::cout << "count down: " << CountdownNum<< std::endl;
+        }
+    }
     if(SDL_GetTicks() > ShutDownTime + 10000){
         std::cout << "==========Game Over============" << std::endl;
         GameOver = true;
-    }
-    if(SDL_GetTicks() > ShutDownTime && (SDL_GetTicks() - ShutDownTime) % 1000 < 10){
-        std::cout << "count down: " << (int)(ShutDownTime + 11000 - SDL_GetTicks()) /1000 << std::endl;
     }
 }
 
