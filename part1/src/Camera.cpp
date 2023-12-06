@@ -206,6 +206,13 @@ void Camera::CheckBattery(){
             SwitchLight();
         }
     }
+    if(SDL_GetTicks() > ShutDownTime + 10000){
+        std::cout << "==========Game Over============" << std::endl;
+        GameOver = true;
+    }
+    if(SDL_GetTicks() > ShutDownTime && (SDL_GetTicks() - ShutDownTime) % 1000 < 10){
+        std::cout << "count down: " << (int)(ShutDownTime + 11000 - SDL_GetTicks()) /1000 << std::endl;
+    }
 }
 
 void Camera::SwitchLight(){
@@ -247,6 +254,10 @@ void Camera::GetBatteryInfo(){
     // std::cout << "HeadLightOn: " << HeadLightOn << std::endl;
     // std::cout << "HeadLightStrength: " << LightStrength << std::endl;
 
+}
+
+bool Camera::GetGameOver(){
+    return GameOver;
 }
 
 Camera::Camera(){

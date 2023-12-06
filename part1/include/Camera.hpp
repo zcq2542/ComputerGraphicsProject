@@ -68,6 +68,7 @@ public:
     float GetLightStrength();
     void CollectBattery();
     void GetBatteryInfo();
+    bool GetGameOver();
 
 private:
 
@@ -96,6 +97,7 @@ private:
     Uint32 RecoverTime;// = 0;
     int BatteryTime;// = 70;
     float LightStrength;
+    bool GameOver = false;
 };
 
 

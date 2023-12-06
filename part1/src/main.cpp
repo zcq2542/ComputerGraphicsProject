@@ -424,7 +424,9 @@ void Input(){
             break;
         }
     }
-    
+    // camera out of battery for 10 sec, Game Over
+    if(g.gCamera.GetGameOver())
+        g.gQuit = true;
 }
 
 
