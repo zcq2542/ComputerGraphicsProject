@@ -1,5 +1,6 @@
 /* Compilation on Linux: 
  g++ -std=c++17 ./src/*.cpp -o prog -I ./include/ -I./../common/thirdparty/ -lSDL2 -ldl
+ Or use Python build script `python build.py`
 */
 
 // Third Party Libraries

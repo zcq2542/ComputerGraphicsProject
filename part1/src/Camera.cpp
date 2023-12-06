@@ -187,7 +187,7 @@ void Camera::CheckBattery(){
             }
         }
         else if(ShutDownTime - SDL_GetTicks() > 15000){
-            LightStrength = 1.5;
+            LightStrength = 1.0f;
         }
     }
     else if(BatteryTime > 0){ // HeadLightOn == 0
@@ -281,7 +281,7 @@ Camera::Camera(){
     BatteryTime = 70;
     ShutDownTime = SDL_GetTicks() + BatteryTime * 1000; // battery time is 70s.
     RecoverTime = 0;
-    LightStrength = 1.5f;
+    LightStrength = 1.0f;
 
 }
 

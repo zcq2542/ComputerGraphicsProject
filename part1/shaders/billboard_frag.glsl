@@ -51,8 +51,7 @@ vec4 HeadLight(){
             //attenuation = 0.5;
             // diffuse light
             float diff =  max(0.0, dot(headLightDirection, fragNormal));
-
-            diffuse = 0.6 * attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse ;
+            diffuse = 1.0 * attenuation * headLightStren * u_HeadLightCol * (diff) * colorDiffuse ;
 
             // specular light
             vec3 reflectionDirection = reflect(headLightDirection, fragNormal);
