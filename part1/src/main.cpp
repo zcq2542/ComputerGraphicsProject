@@ -83,9 +83,6 @@ void InitializeProgram(){
 		exit(1);
 	}
 
-    // // Initialize Light
-    // g.gLight.Initialize();
-
     for(int i = 0; i < 10; ++i){
         gBatteryOBJs.push_back(new OBJ(g.gBatteryFileName));
     }
@@ -199,9 +196,6 @@ void Draw(){
         gBatteryOBJs[i]->Draw();
     }
 
-    // Draw light
-    //g.gLight.PreDraw();
-    //g.gLight.Draw();
 }
 
 /**

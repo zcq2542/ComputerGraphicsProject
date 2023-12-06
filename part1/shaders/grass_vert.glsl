@@ -8,7 +8,6 @@ layout(location=1) in vec3 vertexNormals;
 layout(location=2) in vec2 textureCoords; // Texture coordinates
 layout(location=3) in vec3 tangents; 
 layout(location=4) in vec3 bitangents;
-//layout(location=5) in vec2 offset;
 
 // Uniform variables
 uniform mat4 u_ModelMatrix;
@@ -63,7 +62,6 @@ void main()
   
   vec3 offsetPosition = offsets[gl_InstanceID] + position;
   // Calculate in world space the position of the vertex
-  //v_worldSpaceFragment = vec3(u_ModelMatrix * vec4(position, 1.0f));
   v_worldSpaceFragment = vec3(u_ModelMatrix * vec4(offsetPosition, 1.0f));
 
   // calculate TBN

@@ -49,9 +49,6 @@ uniform Light u_Light[1];
 
 void main()
 {
-  // Send to fragment shader the vertex colors
-  //v_vertexColors = vertexColors;
-
   // Update the normals based on modelMatrix as we are rotating the model
   v_vertexNormals = vertexNormals;
 

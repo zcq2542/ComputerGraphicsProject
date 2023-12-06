@@ -204,6 +204,7 @@ void Camera::CheckBattery(){
             std::cout << "Battery refilled!" << std::endl;
             LightStrength = 1;
             SwitchLight();
+            CountdownNum = 10;
         }
     }
     if(SDL_GetTicks() > ShutDownTime){
