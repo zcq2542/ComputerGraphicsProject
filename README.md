@@ -3,6 +3,7 @@
 * The main objective is to find the target "Chalice". 
 * Your flashlight will run out of battery over time. Collect batteries on the group to extend its duration. Every battery will extend light the duration for another 30 seconds. 
 * It is game over if you cannot collect a battery within 10 seconds after your flashlight run out of battery.
+* Note that it is a large map (40X40), and the game is quite challenging. Enjoy~!
 
 ## Techniques used 
 * Phong Lighting
