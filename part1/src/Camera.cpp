@@ -196,7 +196,7 @@ void Camera::CheckBattery(){
             int max = 1200;
             int randomNumber = min + rand() % (max - min + 1);
             LightStrength = BatteryTime / 15.0f;
-            std::cout << "Flashlight Strength: " << LightStrength << std::endl;
+            // std::cout << "Flashlight Strength: " << LightStrength << std::endl;
             RecoverTime = SDL_GetTicks() + randomNumber; // current to recovertime light is on.
             SwitchLight();
         }
@@ -214,7 +214,7 @@ void Camera::CheckBattery(){
         }
     }
     if(SDL_GetTicks() > ShutDownTime + 10000){
-        std::cout << "==========Game Over============" << std::endl;
+        std::cout << "==========Game Over===========" << std::endl;
         GameOver = true;
     }
 }
@@ -265,7 +265,7 @@ bool Camera::GetGameOver(){
 }
 
 Camera::Camera(){
-    std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
+    // std::cout << "Camera.cpp: (Constructor) Created a Camera!\n";
 	// Position us at the origin.
     m_eyePosition = glm::vec3(0.0f, m_cameraYCoord, 0.0f);
     m_eyeInitialPosition = m_eyePosition;

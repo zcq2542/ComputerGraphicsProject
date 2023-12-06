@@ -49,9 +49,6 @@ struct Global{
 	std::string gTreeFileName2 = "./../common/textures/oak.ppm";
 	std::string gTreeFileName3 = "./../common/textures/pine.ppm";
 
-	// Batteries
-    std::vector<Light> gBatteries;
-
 	// Battery Object
 	std::string gBatteryFileName = "./../common/objects/Battery/Battery6.obj";
 	// House Object
@@ -61,7 +58,8 @@ struct Global{
 	// Windmill Object
 	std::string gWindmillFileName = "./../common/objects/windmill/windmill.obj";
 	// Chalice Object
-	std::string gChaliceFileName = "./../common/objects/Chalice/Stone_Chalic_OBJ.obj";
+	// std::string gChaliceFileName = "./../common/objects/Chalice/Stone_Chalic_OBJ.obj";
+	std::string gChaliceFileName = "./../common/objects/chalice2/chalice2.obj";
 	// Grass Object
 	std::string gGrassFileName = "./../common/objects/grass/grass.obj";
 };

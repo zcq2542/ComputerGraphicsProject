@@ -17,7 +17,7 @@ void main()
     
     vec3 pos = gl_in[0].gl_Position.xyz;
     vec3 toCamera = normalize(u_EyePosition - pos);
-    vec3 up = vec3(0.0, 3.0, 0.0);
+    vec3 up = vec3(0.0, 4.0, 0.0);
     vec3 right = cross(toCamera, up);
     vec3 normal = toCamera;
     float halfSize = 0.5; // Half size of the billboard quad
